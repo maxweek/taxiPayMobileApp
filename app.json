@@ -9,9 +9,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/taxiAppLogo.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/taxiAppLogoMin.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
