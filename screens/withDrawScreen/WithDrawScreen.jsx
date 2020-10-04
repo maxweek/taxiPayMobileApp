@@ -14,12 +14,7 @@ import API, { API_GET_METHODS } from "../../API";
 export default class WithDrawScreen extends Component {
   constructor(props) {
     super(props);
-
-
-    // this.setUserMoneyToPayValue = this.props.setUserMoneyToPayValue.bind(this);
-    // this.setUserCardNumberValue = this.props.setUserCardNumberValue.bind(this);
     this.setUserSelectedPayMethod = this.props.setUserSelectedPayMethod.bind(this);
-
 
     this.item = this.props.item;
     this.state = {
@@ -31,89 +26,43 @@ export default class WithDrawScreen extends Component {
       moneyToPayValue: this.props.moneyToPay
     };
     this.cardLogo = "";
-    switch (this.item.aggregator.id) {
+    switch (this.item.aggregator.type) {
       case 1:
         this.cardLogo = require("../../assets/yandexLogo.png");
         break;
-      case 2:
-        this.cardLogo = require("../../assets/citimobilLogo.png");
-        break;
-      case 3:
-        this.cardLogo = require("../../assets/uberLogo.png");
-        break;
-      case 4:
-        this.cardLogo = require("../../assets/gettaxiLogo.png");
-        break;
+      // case 2:
+      //   this.cardLogo = require("../../assets/citimobilLogo.png");
+      //   break;
+      // case 3:
+      //   this.cardLogo = require("../../assets/uberLogo.png");
+      //   break;
+      // case 4:
+      //   this.cardLogo = require("../../assets/gettaxiLogo.png");
+      //   break;
       default:
         this.cardLogo = require("../../assets/taxiAppLogo.png");
         break;
     }
   }
-  getItems = () => [
-    {
-      id: 1,
-      name: "QIWI",
-      days: [1, 2, 3, 5, 6, 7],
-      start_time: "14:00",
-      end_time: "22:00",
-      commission: 2,
-      fixed_commission: 50,
-      min_payout: 0,
-      max_payout: 0,
-      min_residue: 0,
-      isSelected: false,
-    },
-    {
-      id: 2,
-      name: "Банковская карта",
-      days: [1, 2, 3, 4, 5],
-      start_time: "01:00",
-      end_time: "21:00",
-      commission: "20%",
-      fixed_commission: 300,
-      min_payout: 150,
-      max_payout: "20 000",
-      min_residue: 100,
-      isSelected: false,
-    },
-    {
-      id: 3,
-      name: "Яндекс.Бачи",
-      days: [1, 2, 3, 4, 5, 6, 7],
-      start_time: "01:00",
-      end_time: "12:00",
-      commission: 0,
-      fixed_commission: 0,
-      min_payout: 0,
-      max_payout: 0,
-      min_residue: 0,
-      isSelected: false,
-    },
-  ];
 
   refresh = () => {
     this.setState({ refreshing: true, methods: [], selectedMethod: null });
 
-    // console.log(API_GET_METHODS + '/' + this.item.park.id);
-
-    API.get(API_GET_METHODS + '/' + this.item.park.id).then(res => {
+    API.get(API_GET_METHODS + '/' + this.item.id).then(res => {
       console.log(res.data)
       this.setState({ refreshing: false, methods: res.data })
     });
-    // setTimeout(
-    //   () => this.setState({ refreshing: false, methods: this.getItems()}),
-    //   1500
-    // );
   };
 
   componentDidMount() {
     this.refresh();
+    this.checkContinueButtonStatus()
   }
 
   setUserMoneyToPayValue = (newText) => {
     this.props.setUserMoneyToPayValue(newText);
     this.setState({ moneyToPayValue: newText },
-      () => {this.checkContinueButtonStatus()});
+      () => { this.checkContinueButtonStatus() });
   };
   setUserCardNumberValue = (newText) => {
     this.props.setUserCardNumberValue(newText);
@@ -131,7 +80,6 @@ export default class WithDrawScreen extends Component {
 
     let selectedMethodInArr = methods.filter((method) => method.id === id)[0];
     let nonSelectedMethodInArr = methods.filter((method) => method.id !== id);
-
 
     selectedMethodInArr.isSelected = true;
     nonSelectedMethodInArr.map((method) => {
@@ -168,6 +116,7 @@ export default class WithDrawScreen extends Component {
 
   render() {
     let commissionBox = "";
+    let cardNumberLabel = null;
     if (this.state.selectedMethod === null) {
       commissionBox = (
         <Text style={{ width: "100%", textAlign: "center" }}>
@@ -206,6 +155,19 @@ export default class WithDrawScreen extends Component {
           </View>
         </View>
       );
+      cardNumberLabel = (
+        <View style={styles.moduleWithInput}>
+          <FloatingLabelInput
+            maskType="custom"
+            mask={this.state.selectedMethod.mask}
+            label={this.state.selectedMethod.label}
+            value={this.props.cardNumber}
+            keyboardType="numeric"
+            onChangeText={this.setUserCardNumberValue}
+            onChangeTextRaw={this.setUserCardNumberValueRaw}
+          />
+        </View>
+      )
     }
     return (
       <ScrollView
@@ -276,23 +238,13 @@ export default class WithDrawScreen extends Component {
           </View>
           {commissionBox}
         </View>
-        <View style={styles.moduleWithInput}>
-          <FloatingLabelInput
-            maskType="custom"
-            mask="9999 9999 9999 9999"
-            label="Номер банковской карты"
-            value={this.props.cardNumber}
-            keyboardType="numeric"
-            onChangeText={this.setUserCardNumberValue}
-            onChangeTextRaw={this.setUserCardNumberValueRaw}
-          />
-        </View>
+        {cardNumberLabel}
         <View style={{ margin: 20 }}>
           <MyButton
             title="Продолжить"
             classType="primary"
             withLoading="true"
-            status={this.state.continueButtonStatus}
+            status={"active"}
             onPress={() => this.props.navigation.navigate('Подтверждение')}
           />
         </View>

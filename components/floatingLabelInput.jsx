@@ -29,8 +29,6 @@ export default class FloatingLabelInput extends Component {
     this.setState({ isEmpty: false });
   };
   handleBlur = () => {
-    // console.log(this.props);
-    // console.log(this.props.value)
     if (this.props.value != "" && this.props.value !== undefined) {
       this.setState({ isEmpty: false });
     } else {
@@ -53,7 +51,7 @@ export default class FloatingLabelInput extends Component {
   onChangeText = (newText) => {
     this.setState({ value: newText })
     this.props.onChangeText(newText)
-    if(this.props.onChangeTextRaw !== undefined){
+    if (this.props.onChangeTextRaw !== undefined) {
       setTimeout(() => {
         this.props.onChangeTextRaw(this.input.getRawValue())
       }, 100)
@@ -63,14 +61,6 @@ export default class FloatingLabelInput extends Component {
   render() {
     const labelStyles = {
       position: "absolute",
-      color: this._animatedEmpty.interpolate({
-        inputRange: [0, 1],
-        outputRange: ["#000", "#8a8a8a"],
-      }),
-      fontSize: this._animatedEmpty.interpolate({
-        inputRange: [0, 1],
-        outputRange: [16, 12],
-      }),
       top: this._animatedEmpty.interpolate({
         inputRange: [0, 1],
         outputRange: [15, -8],
@@ -81,6 +71,16 @@ export default class FloatingLabelInput extends Component {
       }),
       zIndex: 20,
     };
+    const labelStylesText = {
+      color: this._animatedEmpty.interpolate({
+        inputRange: [0, 1],
+        outputRange: ["#000", "#8a8a8a"],
+      }),
+      fontSize: this._animatedEmpty.interpolate({
+        inputRange: [0, 1],
+        outputRange: [16, 12],
+      }),
+    }
     const inputStyles = {
       paddingVertical: 10,
       paddingHorizontal: 15,
@@ -97,11 +97,12 @@ export default class FloatingLabelInput extends Component {
     };
     return (
       <View style={styles.outer}>
-        <Animated.Text style={labelStyles}>{this.props.label}</Animated.Text>
+        <Animated.View pointerEvents="none" style={labelStyles}>
+          <Animated.Text style={labelStylesText}>
+            {this.props.label}
+          </Animated.Text>
+        </Animated.View>
         <Animated.View style={inputOuterStyles}>
-          {/* <TextInput
-
-          /> */}
           {this.props.maskType ? <TextInputMask
             type={this.props.maskType}
             options={this.props.mask !== undefined ? {
@@ -119,6 +120,7 @@ export default class FloatingLabelInput extends Component {
             autoCompleteType={this.props.autoCompleteType}
             keyboardType={this.props.keyboardType}
             autoCorrect={this.props.autoCorrect}
+            secureTextEntry={this.props.secureTextEntry}
             selection={this.state.selection}
           /> :
             <TextInput
@@ -131,6 +133,7 @@ export default class FloatingLabelInput extends Component {
               autoCompleteType={this.props.autoCompleteType}
               keyboardType={this.props.keyboardType}
               autoCorrect={this.props.autoCorrect}
+              secureTextEntry={this.props.secureTextEntry}
               selection={this.state.selection}
             />}
         </Animated.View>

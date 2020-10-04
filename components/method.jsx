@@ -35,7 +35,7 @@ export default class Method extends Component {
     }).start();
   }
   handlePress = () => {
-    if(this.state.method.active === true){
+    if (this.state.method.active === true) {
       this.props.onPress()
     }
   }
@@ -44,6 +44,7 @@ export default class Method extends Component {
     this.state.method.active = false;
     this.state.method.isAllDays = 1;
     this.state.method.isWeekDays = 0;
+    this.state.method.isFullDay = 0;
     let methodStartDate = new Date();
     let methodEndDate = new Date();
 
@@ -54,6 +55,10 @@ export default class Method extends Component {
     let inDay = this.state.method.days.indexOf(currDay) !== -1 ? true : false;
     let startTime = this.state.method.start_time.split(":");
     let endTime = this.state.method.end_time.split(":");
+
+    if (this.state.method.start_time === this.state.method.end_time) {
+      this.state.method.isFullDay = 1;
+    }
 
     startTime[0] = parseInt(startTime[0]);
     startTime[1] = parseInt(startTime[1]);
@@ -91,11 +96,15 @@ export default class Method extends Component {
     }
 
     if (inDay === true) {
-      if (
-        this.now.getTime() > methodStartDate.getTime() &&
-        this.now.getTime() < methodEndDate.getTime()
-      ) {
+      if (this.state.method.isFullDay === 1) {
         this.state.method.active = true;
+      } else {
+        if (
+          this.now.getTime() > methodStartDate.getTime() &&
+          this.now.getTime() < methodEndDate.getTime()
+        ) {
+          this.state.method.active = true;
+        }
       }
     }
   };
@@ -108,10 +117,10 @@ export default class Method extends Component {
       width: "100%",
       height: "100%",
       backgroundColor: "#ebf5d0",
-        opacity: this._animateSelected.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 1],
-        }),
+      opacity: this._animateSelected.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, 1],
+      }),
       transform: [
         {
           scale: this._animateSelected.interpolate({
@@ -144,7 +153,7 @@ export default class Method extends Component {
                 </Text>
               </View>
             </View>
-            <View style={{ alignItems: "flex-end" , marginVertical: 4}}>
+            <View style={{ alignItems: "flex-end", marginVertical: 4 }}>
               <View
                 style={{
                   alignItems: "flex-end",
@@ -170,8 +179,8 @@ export default class Method extends Component {
                 {this.state.method.isAllDays === 1
                   ? "Каждый день"
                   : this.state.method.isWeekDays === 1
-                  ? this.state.method.weekDays
-                  : this.state.method.days.map((day) => {
+                    ? this.state.method.weekDays
+                    : this.state.method.days.map((day) => {
                       i++;
                       let divider = "";
                       if (i !== 1) {
@@ -181,7 +190,7 @@ export default class Method extends Component {
                     })}
               </Text>
               <Text style={{ fontSize: 10, color: "#7f7f7f" }}>
-                {this.state.method.start_time} - {this.state.method.end_time}
+                {this.state.method.isFullDay === 1 ? 'Круглосуточно' : this.state.method.start_time + ' - ' + this.state.method.end_time}
               </Text>
             </View>
           </View>

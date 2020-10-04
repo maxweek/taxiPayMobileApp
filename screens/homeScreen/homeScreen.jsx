@@ -23,116 +23,27 @@ export default class HomeScreen extends Component {
     };
 
     this._animatedModal = new Animated.Value(0);
-
-
-
   }
-  getItems = () => [
-    {
-      id: 1,
-      name: "Никита Иванович Фоминa",
-      balance: 1945,
-      status: {
-        id: 1,
-        name: "Работает",
-      },
-      aggregator: {
-        id: 1,
-        name: "Яндекс.Такси",
-      },
-      park: {
-        id: 9,
-        name: "МКК Микро",
-      },
-    },
-    {
-      id: 2,
-      name: "Антропов",
-      balance: 5000,
-      status: {
-        id: 1,
-        name: "Работает",
-      },
-      aggregator: {
-        id: 2,
-        name: "Ситимобил",
-      },
-      park: {
-        id: 9,
-        name: "МКК Микро",
-      },
-    },
-    {
-      id: 3,
-      name: "Имя Фамилия",
-      balance: 123,
-      status: {
-        id: 1,
-        name: "Работает",
-      },
-      aggregator: {
-        id: 3,
-        name: "Убер ебать",
-      },
-      park: {
-        id: 9,
-        name: "МКК Микро",
-      },
-    },
-    {
-      id: 4,
-      name: "Гурген Петрович",
-      balance: 1945,
-      status: {
-        id: 1,
-        name: "Работает",
-      },
-      aggregator: {
-        id: 4,
-        name: "Убер Раша",
-      },
-      park: {
-        id: 9,
-        name: "МКК Микро",
-      },
-    },
-    {
-      id: 5,
-      name: "Пурген Виталич",
-      balance: 1945,
-      status: {
-        id: 1,
-        name: "Работает",
-      },
-      aggregator: {
-        id: 5,
-        name: "Везёт",
-      },
-      park: {
-        id: 9,
-        name: "МКК Микро",
-      },
-    },
-  ];
+  
   refresh = () => {
     this.setState({ refreshing: true, items: [] });
 
     API.get(API_GET_ACCOUNTS).then(res => {
-      // console.log(res.data)
+      console.log(res.data)
       this.setState({ refreshing: false, items: res.data })
     });
   };
 
   componentDidMount() {
     this.refresh();
-    // console.log(this.props.status)
     if (this.props.status) {
       this.setState({
         status: {
           type: this.props.status.type,
           endSumm: this.props.status.endSumm,
           showModal: this.props.status.showModal,
-          showModalInner: this.props.status.showModalInner
+          showModalInner: this.props.status.showModalInner,
+          message: this.props.status.message
         },
       })
       this.timeOutModal()
@@ -145,41 +56,27 @@ export default class HomeScreen extends Component {
         endSumm: this.props.status.endSumm,
         showModal: this.props.status.showModal,
         showModalInner: this.props.status.showModalInner,
-        showed: true
+        showed: true,
+        message: this.props.status.message
       },
     })
   }
   componentDidUpdate(prevState) {
-    console.log(prevState.status)
-    console.log(this.state.status)
     if (this.props.status) {
-
       if (prevState.status.showModal !== this.state.status.showModal && this.props.status.showed === false) {
         this.props.status.showed = true;
-        console.log('false')
         this.setStatus();
-      } else {
-        console.log('=ss==')
       }
     }
-    // console.log(this.props.status)
 
     Animated.timing(this._animatedModal, {
       toValue: this.state.status.showModalInner ? 0 : 1,
       duration: 200,
-      // easing: Easing.bounce()
     }).start();
   }
   timeOutModal = () => {
-    // setTimeout(() => {
-    //   this.setState({
-    //     showModal: false,
-    //     showModalInner: false
-    //   })
-    // }, 5000)
   }
   onCloseModal = () => {
-    // console.log(this.state);
     this.setState({
       status: { ...this.state.status, showModalInner: false }
     })
@@ -255,7 +152,7 @@ export default class HomeScreen extends Component {
     }
     return (
       <View style={{ flex: 1, position: 'relative' }}>
-        {<Animated.View style={notificBox}>
+        {this.state.status.showModal ? <Animated.View style={notificBox}>
           <Animated.View style={notificBoxInner}>
             <View
               style={{
@@ -282,13 +179,18 @@ export default class HomeScreen extends Component {
                 <Text style={statusBarText}>{this.state.status.type === 1 ? 'Успешно' : 'Ошибка'}</Text>
               </View>
             </View>
+            <View style={{ justifyContent: 'center', flexDirection: 'row', alignItems: 'center', marginBottom: 10, paddingVertical: 10, borderTopWidth: 1, borderTopColor: 'lightgray', borderStyle: 'solid' }}>
+              <View style={statusBarBox}>
+                <Text style={statusBarText}>{this.state.status.message}</Text>
+              </View>
+            </View>
             <MyButton onPress={this.onCloseModal}
               title="Ок"
               classType="primary"
               withLoading="true"
               status="active" />
           </Animated.View>
-        </Animated.View>}
+        </Animated.View> : null}
         <FlatList
           contentContainerStyle={{ paddingVertical: 5 }}
           data={this.state.items}

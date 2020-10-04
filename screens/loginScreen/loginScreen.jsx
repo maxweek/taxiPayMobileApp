@@ -12,6 +12,7 @@ import {
 import FloatingLabelInput from "../../components/floatingLabelInput";
 import MyButton from "../../components/myButton";
 import API, { API_USER_LOGIN, API_CHECK, apiSetSID } from "../../API";
+import { expo } from "../../app.json";
 
 export default class LoginScreen extends Component {
   constructor(props) {
@@ -35,22 +36,6 @@ export default class LoginScreen extends Component {
     this.props.setUserPasswordValue(newText);
   };
   handleUserLoggedIn = () => {
-    // fetch('http://127.0.0.1:8000/blabla').then(res => res.json()).then(res => console.log(res));
-    //   fetch('https://api.github.com/repos/javascript-tutorial/en.javascript.info/commits')
-    // .then(response => response.json())
-    // .then(commits => alert(commits[0].author.login));
-
-    // var formData = new FormData();
-    // formData.append('telephone', '89288254353');
-    // formData.append('password', '2602630604');
-
-    // fetch('http://cp.taxipay.antonov.site/api/login/driver', { 
-    //   method: 'POST',
-    //   body: formData
-    // })
-    // .then((res) => res.text())
-    // .then((res) => console.log(res))
-    // .catch((res) => console.log(res));
 
     const formData = new FormData();
     formData.append('telephone', this.props.username);
@@ -70,12 +55,6 @@ export default class LoginScreen extends Component {
           this.setState({ notificationVisible: false })
         }, 3000)
       })
-      .catch((res) => {
-        console.log(res);
-      });
-    // 
-    setTimeout(() => {
-    }, 2000);
   };
   componentDidUpdate() {
     Animated.timing(this._animatedNotification, {
@@ -125,6 +104,7 @@ export default class LoginScreen extends Component {
             value={this.props.password}
             onChangeText={this.handlePasswordChange}
             autoCorrect={false}
+            secureTextEntry={true}
           />
 
           <View style={styles.btnBox}>
@@ -149,7 +129,12 @@ export default class LoginScreen extends Component {
           </View>
         </View>
         <View style={styles.copyright}>
-          <Text style={{ color: "#e0e0e0" }}>Powered by Maxim Nedelko</Text>
+          <Image
+            style={styles.imageCopyright}
+            source={require("../../assets/taxiAppString_gray_min.png")}
+          />
+          <Text style={styles.version}>v. {expo.version}</Text>
+          <Text style={styles.copyrightText}>Powered by Maxim Nedelko</Text>
         </View>
       </View>
     );
@@ -189,8 +174,17 @@ const styles = StyleSheet.create({
     bottom: 20,
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
+    flexDirection: "column",
     width: "100%",
   },
-  copyrightText: {},
+  imageCopyright: {
+    width: 140,
+    marginBottom: 5
+  },
+  version: {
+    color: "#e0e0e0"
+  },
+  copyrightText: {
+    color: "#e0e0e0"
+  },
 });

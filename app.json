@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "taxiApp",
-    "slug": "taxiApp",
+    "name": "DriverMoney",
+    "slug": "drivermoney",
     "platforms": [
       "ios",
       "android",
@@ -11,7 +11,7 @@
     "orientation": "portrait",
     "icon": "./assets/taxiAppLogo.png",
     "splash": {
-      "image": "./assets/taxiAppLogoMin.png",
+      "image": "./assets/taxiAppLogoFull.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,6 +23,8 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "DriverMoney App for taxi-drivers",
+    "githubUrl": "https://github.com/maxweek/taxiPayMobileApp"
   }
 }

@@ -17,6 +17,7 @@ import MyButton from "../../components/myButton";
 import Animated from "react-native-reanimated";
 import Method from "../../components/method";
 import AlertBox from "../../components/alertBox";
+import API, { API_USER_GET_MONEY } from "../../API";
 
 export default class ConfirmScreen extends Component {
   constructor(props) {
@@ -50,33 +51,47 @@ export default class ConfirmScreen extends Component {
         i = 0;
       }
     }
+    
   }
 
   onPress = () => {
-    let type = true;
-    if (type) {
-      this.props.navigation.navigate("Список аккаунтов", {
-        status: {
-          type: 1,
-          endSumm: this.getEndSummToPay(),
-          showModal: true,
-          showModalInner: true,
-          showed: false
-        }
-      });
-    } else {
-      this.props.navigation.navigate("Список аккаунтов", {
-        status: {
-          type: 2,
-          endSumm: this.getEndSummToPay(),
-          showModal: true,
-          showModalInner: true,
-          showed: false
-          // TODO kek
-        }
-      });
-    }
+    let request = this.sendRequest();
+    request.then(res => {
+      console.log(res.data)
+      if (res.data.type === 'success') {
+        this.props.navigation.navigate("Список аккаунтов", {
+          status: {
+            type: 1,
+            endSumm: this.getEndSummToPay(),
+            showModal: true,
+            showModalInner: true,
+            showed: false,
+            message: res.data.message
+          }
+        });
+      }
+      if (res.data.type === 'error') {
+        this.props.navigation.navigate("Список аккаунтов", {
+          status: {
+            type: 2,
+            endSumm: this.getEndSummToPay(),
+            showModal: true,
+            showModalInner: true,
+            showed: false,
+            message: res.data.message
+          }
+        });
+      }
+    });
   };
+  sendRequest = () => {
+    const formData = new FormData();
+    formData.append('create_form[amount]', this.state.user.info.moneyToPayRaw)
+    formData.append('create_form[type]', this.state.user.info.selectedMethod.id)
+    formData.append('create_form[card]', this.state.user.info.cardNumberRaw)
+    
+    return API.post(API_USER_GET_MONEY + '/' + this.state.user.info.account.id, formData);
+  }
   getComission = () => {
     return (
       (this.state.user.info.moneyToPayRaw *
@@ -85,14 +100,27 @@ export default class ConfirmScreen extends Component {
     );
   };
   getEndSummToPay = () => {
-    return (
-      this.state.user.info.moneyToPayRaw -
-      this.getComission() -
+    let summ = (
+      this.state.user.info.moneyToPayRaw +
+      this.getComission() +
       this.state.user.info.selectedMethod.fixed_commission
     );
+    summ = Math.ceil(summ * 100) / 100
+    return summ;
   };
   render() {
+    let edge = {
+      down: this.state.user.info.selectedMethod.min_payout === 0 ? true : (this.state.user.info.selectedMethod.min_payout <= this.state.user.info.moneyToPayRaw ? true : false),
+      up: this.state.user.info.selectedMethod.max_payout === 0 ? true : (this.state.user.info.selectedMethod.max_payout >= this.state.user.info.moneyToPayRaw ? true : false),
+    }
+    let isErrorMin = {
+      color: edge.down ? '#8ebd0c' : '#f24a24'
+    }
+    let isErrorMax = {
+      color: edge.up ? '#8ebd0c' : '#f24a24'
+    }
     let commissionBox = "";
+    let buttonBox = "";
     if (this.state.user.info.selectedMethod === "") {
       commissionBox = (
         <Text style={{ width: "100%", textAlign: "center" }}>
@@ -110,6 +138,22 @@ export default class ConfirmScreen extends Component {
             <Text style={styles.commissionText}>Фиксированная комиссия:</Text>
             <Text>
               {this.state.user.info.selectedMethod.fixed_commission} ₽
+            </Text>
+          </View>
+          <View style={styles.comissionLine}>
+            <Text style={[styles.commissionText, isErrorMin]}>Минимальная сумма вывода:</Text>
+            <Text style={isErrorMin}>
+              {this.state.user.info.selectedMethod.min_payout === 0 ? (
+                'Без ограничений'
+              ) : this.state.user.info.selectedMethod.min_payout  + ' ₽'}
+            </Text>
+          </View>
+          <View style={styles.comissionLine}>
+            <Text style={[styles.commissionText, isErrorMax]}>Максимальная сумма вывода:</Text>
+            <Text style={isErrorMax}>
+              {this.state.user.info.selectedMethod.max_payout === 0 ? (
+                'Без ограничений'
+              ) : this.state.user.info.selectedMethod.max_payout  + ' ₽'}
             </Text>
           </View>
         </View>
@@ -173,9 +217,7 @@ export default class ConfirmScreen extends Component {
           {this.state.user.info.selectedMethod !== "" ? (
             <Method method={this.state.user.info.selectedMethod} onPress={() => false} />
           ) : (
-              <Text
-                style={{ width: "100%", textAlign: "center", marginBottom: 7 }}
-              >
+              <Text style={{ width: "100%", textAlign: "center", marginBottom: 7 }}>
                 Не выбран способ оплаты
               </Text>
             )}
@@ -184,7 +226,7 @@ export default class ConfirmScreen extends Component {
         <View style={styles.module}>
           <View style={styles.moduleHeaderBox}>
             <AlertBox status={this.cardNumberFormatted !== '' ? true : false} />
-            <Text style={styles.moduleHeader}>Номер карты</Text>
+            <Text style={styles.moduleHeader}>{this.state.user.info.selectedMethod.label}</Text>
           </View>
           <Text style={{ fontSize: 20, textAlign: "right" }}>
             {this.cardNumberFormatted !== '' ? this.cardNumberFormatted : 'Номер не указан'}
@@ -192,7 +234,8 @@ export default class ConfirmScreen extends Component {
         </View>
         <View style={styles.module}>
           <View style={styles.moduleHeaderBox}>
-            <AlertBox status={this.state.user.info.selectedMethod !== '' ? true : false} />
+            <AlertBox status={
+              this.state.user.info.selectedMethod !== '' ? (edge.down && edge.up ? true : false) : false} />
             <Text style={styles.moduleHeader}>Данные</Text>
           </View>
           {commissionBox}
@@ -205,7 +248,7 @@ export default class ConfirmScreen extends Component {
               alignItems: "flex-end",
             }}
           >
-            <Text style={{ marginBottom: 3 }}>Итого:</Text>
+            <Text style={{ marginBottom: 3 }}>Сумма списания:</Text>
             <View
               style={{
                 flexDirection: "row",
@@ -222,11 +265,11 @@ export default class ConfirmScreen extends Component {
         </View>
         <View style={{ margin: 20 }}>
           <MyButton
-            title="Подтвердить"
+            title={edge.down && edge.up ? "Подвердить" : "Назад"}
             classType="primary"
             withLoading="true"
             status="active"
-            onPress={this.onPress}
+            onPress={edge.down && edge.up ? this.onPress : () => {this.props.navigation.goBack()}}
           />
         </View>
       </ScrollView>
