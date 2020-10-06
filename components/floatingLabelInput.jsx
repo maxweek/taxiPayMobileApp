@@ -89,7 +89,7 @@ export default class FloatingLabelInput extends Component {
     const inputOuterStyles = {
       borderBottomColor: this._animatedFocused.interpolate({
         inputRange: [0, 1],
-        outputRange: ["#e8f7bc", "#bbf224"],
+        outputRange: ["#e3cdf5", "#7f3cb5"],
       }),
       borderBottomWidth: 2,
       borderStyle: "solid",

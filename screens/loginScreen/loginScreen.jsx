@@ -7,12 +7,14 @@ import {
   Animated,
   Button,
   Image,
-  StyleSheet,
+  StyleSheet, Linking, Alert
 } from "react-native";
 import FloatingLabelInput from "../../components/floatingLabelInput";
 import MyButton from "../../components/myButton";
 import API, { API_USER_LOGIN, API_CHECK, apiSetSID } from "../../API";
 import { expo } from "../../app.json";
+import WebView from "react-native-webview";
+import InAppBrowser from "react-native-inappbrowser-reborn";
 
 export default class LoginScreen extends Component {
   constructor(props) {
@@ -84,9 +86,9 @@ export default class LoginScreen extends Component {
         <View style={styles.inner}>
           <Image
             style={styles.imageLogo}
-            source={require("../../assets/taxiAppLogo.png")}
+            source={require("../../assets/taxiAppLogo_coloredMin.png")}
           />
-          <Text style={styles.title}>Вход</Text>
+          {/* <Text style={styles.title}>Вход</Text> */}
           <Animated.View style={notificationBox}>
             <Animated.Text style={notificationText}>{this.state.notification}</Animated.Text>
           </Animated.View>
@@ -123,18 +125,30 @@ export default class LoginScreen extends Component {
               title="Забыл пароль"
               status="active"
               onPress={() => {
-                this.props.navigation.navigate("Восстановление пароля");
+                this.props.navigation.navigate("Получить пароль");
+              }}
+            />
+          </View>
+          <View style={styles.btnBoxRegister}>
+            <MyButton
+              title="Регистрация"
+              classType="primary"
+              status="active"
+              style={{ width: '100%' }}
+              onPress={() => {
+                this.props.navigation.navigate("Получить пароль");
               }}
             />
           </View>
         </View>
         <View style={styles.copyright}>
-          <Image
-            style={styles.imageCopyright}
-            source={require("../../assets/taxiAppString_gray_min.png")}
-          />
+          <Text style={styles.act}>Продолжая пользоваться данным приложением я соглашаюсь с <Text style={{ color: '#656565', textDecorationLine: 'underline', }} onPress={() => {
+            this.props.navigation.navigate("Договор");
+          }}>
+            договором</Text>.</Text>
           <Text style={styles.version}>v. {expo.version}</Text>
-          <Text style={styles.copyrightText}>Powered by Maxim Nedelko</Text>
+          <Text style={styles.copyrightText}>drivermoney.online</Text>
+          {/* <Text style={styles.copyrightText}>Powered by Maxim Nedelko</Text> */}
         </View>
       </View>
     );
@@ -157,8 +171,8 @@ const styles = StyleSheet.create({
   },
 
   imageLogo: {
-    width: 64,
-    height: 64,
+    width: 220,
+    height: 66,
     marginBottom: 5,
   },
   title: {
@@ -169,6 +183,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
   },
+  btnBoxRegister: {
+    display: 'flex',
+    width: "100%",
+    marginTop: 30
+  },
   copyright: {
     position: "absolute",
     bottom: 20,
@@ -178,7 +197,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   imageCopyright: {
-    width: 140,
+    width: 220,
     marginBottom: 5
   },
   version: {
@@ -187,4 +206,9 @@ const styles = StyleSheet.create({
   copyrightText: {
     color: "#e0e0e0"
   },
+  act: {
+    color: "#b5b5b5",
+    textAlign: 'center',
+    marginBottom: 5
+  }
 });

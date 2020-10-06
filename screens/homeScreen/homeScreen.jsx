@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-import { ScrollView, Text, View, Button, RefreshControl, StyleSheet, Dimensions, Animated } from "react-native";
+import {
+  ScrollView, Text, View, Button, RefreshControl, StyleSheet, Dimensions,
+  Image, Animated
+} from "react-native";
 import MyButton from "../../components/myButton";
 import { FlatList, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import Card from "../../components/card";
@@ -24,7 +27,7 @@ export default class HomeScreen extends Component {
 
     this._animatedModal = new Animated.Value(0);
   }
-  
+
   refresh = () => {
     this.setState({ refreshing: true, items: [] });
 
@@ -191,6 +194,13 @@ export default class HomeScreen extends Component {
               status="active" />
           </Animated.View>
         </Animated.View> : null}
+        <View style={{ height: 86, paddingTop: 10 }}>
+          <View style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingVertical: 5}}>
+            <Image
+              source={require("../../assets/taxiAppLogo_coloredMin.png")}
+            />
+          </View>
+        </View>
         <FlatList
           contentContainerStyle={{ paddingVertical: 5 }}
           data={this.state.items}

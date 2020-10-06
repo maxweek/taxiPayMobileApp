@@ -78,8 +78,8 @@ export default class WithDrawScreen extends Component {
   onMethodSelect = (id) => {
     let methods = [...this.state.methods];
 
-    let selectedMethodInArr = methods.filter((method) => method.id === id)[0];
-    let nonSelectedMethodInArr = methods.filter((method) => method.id !== id);
+    let selectedMethodInArr = methods.filter((method) => method.type === id)[0];
+    let nonSelectedMethodInArr = methods.filter((method) => method.type !== id);
 
     selectedMethodInArr.isSelected = true;
     nonSelectedMethodInArr.map((method) => {
@@ -209,8 +209,8 @@ export default class WithDrawScreen extends Component {
           {this.state.methods.map((method) => (
             <Method
               method={method}
-              key={method.id}
-              onPress={() => this.onMethodSelect(method.id)}
+              key={method.type}
+              onPress={() => this.onMethodSelect(method.type)}
             />
           ))}
         </View>
@@ -244,7 +244,7 @@ export default class WithDrawScreen extends Component {
             title="Продолжить"
             classType="primary"
             withLoading="true"
-            status={"active"}
+            status="active"
             onPress={() => this.props.navigation.navigate('Подтверждение')}
           />
         </View>

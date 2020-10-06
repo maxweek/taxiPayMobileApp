@@ -4,18 +4,15 @@ import { StyleSheet, Text, View, AppRegistry } from "react-native";
 // import SecuredScreen from "./screens/securedScreen";
 
 import { createStackNavigator } from "@react-navigation/stack";
+// import { createDrawerNavigator } from '@react-navigation/drawer';
 import RecoveryScreen from "./screens/recoveryScreen";
-import SplashScreen from "./screens/splashScreen";
-import LoadingScreen from "./screens/LoadingScreen";
+import PolicyScreen from "./screens/policyScreen"
 import LoginScreenContainer from "./screens/loginScreen/loginScreenContainer";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import homeScreenContainer from "./screens/homeScreen/homeScreenContainer";
 import { connect } from "react-redux";
-import withDrawContainer from "./screens/withDrawScreen/withDrawContainer";
-import confirmContainer from "./screens/confirmScreen/confirmContainer";
+import RootNavigator from "./rootNavigator"
 
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
+// const Drawer = createDrawerNavigator();
 
 class AppNavigator extends React.Component {
   constructor(props) {
@@ -41,36 +38,24 @@ class AppNavigator extends React.Component {
             }}
           />
           <Stack.Screen
-            name="Восстановление пароля"
+            name="Получить пароль"
             component={RecoveryScreen}
             options={{
               headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Договор"
+            component={PolicyScreen}
+            options={{
+              headerShown: true,
             }}
           />
         </Stack.Navigator>
       );
     } else {
       return (
-        <Stack.Navigator style={styles.container}>
-          <Stack.Screen
-            name="Список аккаунтов"
-            component={homeScreenContainer}
-          />
-          <Stack.Screen
-            name="Вывод средств"
-            component={withDrawContainer}
-            options={{
-              headerBackTitle: "Назад",
-            }}
-          />
-          <Stack.Screen
-            name="Подтверждение"
-            component={confirmContainer}
-            options={{
-              headerBackTitle: "Назад",
-            }}
-          />
-        </Stack.Navigator>
+        <RootNavigator />
       );
     }
   }

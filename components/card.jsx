@@ -98,9 +98,12 @@ export default class Card extends Component {
                 {this.props.item.aggregator.name}
               </Text>
             </View>
-            <View>
+            <View style={{borderBottomColor: "#e0e0e0", borderStyle: 'solid', borderBottomWidth: 1, paddingBottom: 6, marginBottom: 6, marginRight: 20}}>
               <Text style={{ color: "#7f7f7f" }}>
                 {this.props.item.park.name}
+              </Text>
+              <Text style={{ color: "#7f7f7f" }}>
+                {this.props.item.park.telephone}
               </Text>
             </View>
             <View>

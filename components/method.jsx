@@ -26,6 +26,25 @@ export default class Method extends Component {
     this.weekDays = [1, 2, 3, 4, 5];
     this.now = new Date();
     this._animateSelected = new Animated.Value(0);
+
+    this.methodLogo = "";
+    switch (this.state.method.type) {
+      case 1:
+        this.methodLogo = require("../assets/ico_method_qiwi.png");
+        break;
+      case 2:
+        this.methodLogo = require("../assets/ico_method_card.png");
+        break;
+      // case 3:
+      //   this.cardLogo = require("../../assets/uberLogo.png");
+      //   break;
+      // case 4:
+      //   this.cardLogo = require("../../assets/gettaxiLogo.png");
+      //   break;
+      default:
+        this.methodLogo = require("../assets/ico_method_card.png");
+        break;
+    }
   }
 
   componentDidUpdate() {
@@ -116,7 +135,7 @@ export default class Method extends Component {
       position: "absolute",
       width: "100%",
       height: "100%",
-      backgroundColor: "#ebf5d0",
+      backgroundColor: "#f6e7ff",
       opacity: this._animateSelected.interpolate({
         inputRange: [0, 1],
         outputRange: [0, 1],
@@ -145,8 +164,7 @@ export default class Method extends Component {
             >
               <Image
                 style={styles.withDrawImage}
-                source={require("../assets/taxiAppLogo.png")}
-              />
+                source={this.methodLogo} />
               <View>
                 <Text style={styles.withDrawText}>
                   {this.state.method.name}
@@ -209,8 +227,8 @@ const styles = StyleSheet.create({
   },
   withDrawImage: {
     marginRight: 20,
-    width: 40,
-    height: 40
+    width: 46,
+    height: 46
   },
   withDrawText: {
     fontSize: 16,

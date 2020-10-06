@@ -85,13 +85,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   btnPrimary: {
-    backgroundColor: "#bbf224",
+    backgroundColor: "#7f3cb5",
   },
   btnSecondary: {
     backgroundColor: "transparent",
   },
   txtPrimary: {
-    color: "black",
+    color: "white",
   },
   txtSecondary: {
     color: "black",

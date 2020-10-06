@@ -257,7 +257,7 @@ export default class ConfirmScreen extends Component {
               }}
             >
               <Text style={styles.balanceBoxTextEnd}>
-                {this.getEndSummToPay()}
+                {!isNaN(this.getEndSummToPay()) ? this.getEndSummToPay() : 0}
               </Text>
               <Text style={styles.balanceBoxExtEnd}>₽</Text>
             </View>
@@ -265,11 +265,11 @@ export default class ConfirmScreen extends Component {
         </View>
         <View style={{ margin: 20 }}>
           <MyButton
-            title={edge.down && edge.up ? "Подвердить" : "Назад"}
+            title={edge.down && edge.up && this.cardNumberFormatted !== '' ? "Подвердить" : "Назад"}
             classType="primary"
             withLoading="true"
             status="active"
-            onPress={edge.down && edge.up ? this.onPress : () => {this.props.navigation.goBack()}}
+            onPress={edge.down && edge.up && this.cardNumberFormatted !== '' ? this.onPress : () => {this.props.navigation.goBack()}}
           />
         </View>
       </ScrollView>

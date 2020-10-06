@@ -14,9 +14,9 @@ export default class App extends Component {
       <Provider store={store}>
         <NavigationContainer>
           <StatusBar
-            barStyle="dark-content"
+            barStyle="light-content"
             hidden={false}
-            backgroundColor="#bbf224"
+            backgroundColor="#7f3cb5"
             translucent={true}
           />
           <AppNavigator />

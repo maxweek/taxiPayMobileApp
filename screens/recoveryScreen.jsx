@@ -140,7 +140,7 @@ export default class RecoveryScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.inner}>
-          <Text style={styles.title}>Восстановление пароля</Text>
+          <Text style={styles.title}>Получить пароль</Text>
           <View style={statusBarBox}>
             <Text style={statusBarText}>{this.state.message}</Text>
           </View>
