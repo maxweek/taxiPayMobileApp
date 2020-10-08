@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, AppRegistry } from "react-native";
+import { StyleSheet, Text, View, AppRegistry, Dimensions } from "react-native";
 // import LoginScreen from "./screens/loginScreen/loginScreen";
 // import SecuredScreen from "./screens/securedScreen";
-
+// import { useWindowDimensions } from 'react-native';
 import { createStackNavigator } from "@react-navigation/stack";
-// import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import RecoveryScreen from "./screens/recoveryScreen";
 import PolicyScreen from "./screens/policyScreen"
 import LoginScreenContainer from "./screens/loginScreen/loginScreenContainer";
@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import RootNavigator from "./rootNavigator"
 
 const Stack = createStackNavigator();
-// const Drawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator();
 
 class AppNavigator extends React.Component {
   constructor(props) {
@@ -27,6 +27,7 @@ class AppNavigator extends React.Component {
     // if(this.props.state.user.info.isLoading){
     //   return <LoadingScreen />
     // }
+    console.log(Dimensions.get('window').width)
     if (!this.props.state.user.info.isLoggedIn) {
       return (
         <Stack.Navigator style={styles.container}>
@@ -55,7 +56,16 @@ class AppNavigator extends React.Component {
       );
     } else {
       return (
-        <RootNavigator />
+        <Drawer.Navigator
+          drawerPosition="right"
+          drawerType="front"
+          overlayColor="#290d40d6"
+          edgeWidth={Dimensions.get('window').width}
+          drawerStyle={styles.drawerWindow}
+        >
+          <Drawer.Screen name="Главная" component={RootNavigator} />
+          <Drawer.Screen name="Тест" component={PolicyScreen}/>
+        </Drawer.Navigator>
       );
     }
   }
@@ -78,4 +88,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  drawerWindow: {
+    backgroundColor: '#f2f2f2'
+  }
 });

@@ -14,7 +14,6 @@ import MyButton from "../../components/myButton";
 import API, { API_USER_LOGIN, API_CHECK, apiSetSID } from "../../API";
 import { expo } from "../../app.json";
 import WebView from "react-native-webview";
-import InAppBrowser from "react-native-inappbrowser-reborn";
 
 export default class LoginScreen extends Component {
   constructor(props) {

@@ -7,16 +7,39 @@ import withDrawContainer from "./screens/withDrawScreen/withDrawContainer";
 import confirmContainer from "./screens/confirmScreen/confirmContainer";
 import homeScreenContainer from "./screens/homeScreen/homeScreenContainer";
 import { connect } from "react-redux";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Stack = createStackNavigator();
 
 class RootNavigator extends React.Component {
+    constructor(props) {
+        super(props)
+        console.log("-------")
+        console.log(props.navigation)
+        console.log("-------")
+        this.state = {
+            nav: props.navigation
+        }
+
+    }
     render() {
         return (
-            <Stack.Navigator style={styles.container}>
+            <Stack.Navigator style={styles.container}
+            >
                 <Stack.Screen
                     name="Список аккаунтов"
                     component={homeScreenContainer}
+                    options={{
+                        headerRight: (props) => {
+                            return (
+                                <TouchableOpacity style={{display:'flex', justifyContent: 'space-between', width: 60, height: '100%', padding: 20}} onPress={() => { this.state.nav.openDrawer() }}>
+                                    <View style={{width: '100%', height: 2, backgroundColor: 'black'}}></View>
+                                    <View style={{width: '100%', height: 2, backgroundColor: 'black'}}></View>
+                                    <View style={{width: '100%', height: 2, backgroundColor: 'black'}}></View>
+                                </TouchableOpacity>
+                            )
+                        }
+                    }}
                 />
                 <Stack.Screen
                     name="Вывод средств"
