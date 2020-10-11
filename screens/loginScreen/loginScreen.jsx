@@ -14,6 +14,7 @@ import MyButton from "../../components/myButton";
 import API, { API_USER_LOGIN, API_CHECK, apiSetSID } from "../../API";
 import { expo } from "../../app.json";
 import WebView from "react-native-webview";
+import AsyncStorage from "@react-native-community/async-storage";
 
 export default class LoginScreen extends Component {
   constructor(props) {
@@ -22,12 +23,39 @@ export default class LoginScreen extends Component {
       response: "",
       notification: "Жопа",
       notificationVisible: false,
-      notificationColor: "#bbf224"
+      notificationColor: "#bbf224",
+      nativeToken: '',
+      isNativeTokenNull: null,
     };
     this._animatedNotification = new Animated.Value(0);
     this.setUserUsernameValue = this.props.setUserUsernameValue.bind(this);
     this.setUserPasswordValue = this.props.setUserPasswordValue.bind(this);
+    this.setUserNativeToken = this.props.setUserNativeToken.bind(this);
     this.props.setUserLoadingOff();
+  }
+
+  setNativeToken = async (data) => {
+    try {
+      await AsyncStorage.setItem('nativeToken', data.token)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  getNativeToken = async (data = null) => {
+    try {
+      const nativeToken = await AsyncStorage.getItem('nativeToken');
+      if(nativeToken !== null) {
+        this.props.setUserNativeToken(nativeToken)
+        this.setState({nativeToken: nativeToken, isNativeTokenNull: false})
+        let userdata = JSON.parse(nativeToken)
+        this.handleUsernameChange(userdata.key)
+        this.handlePasswordChange(userdata.value)
+      } else {
+        this.setState({isNativeTokenNull: true})
+      }
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   handleUsernameChange = (newText) => {
@@ -40,14 +68,19 @@ export default class LoginScreen extends Component {
 
     const formData = new FormData();
     formData.append('telephone', this.props.username);
-    formData.append('password', this.props.password);
+    formData.append('password', this.props.password); 
 
     API.post(API_USER_LOGIN, formData)
       .then(res => {
         console.log(res)
         if (typeof res.data['sid'] !== "undefined") {
+          let userDataToToken = {
+            key: this.props.username,
+            value: this.props.password
+          }
           this.setState({ notification: 'Успешно', notificationColor: '#bbf224', notificationVisible: true })
           apiSetSID(res.data.sid);
+          this.setNativeToken({token: JSON.stringify(userDataToToken)})
           this.props.setUserLoggedIn();
         } else {
           this.setState({ notification: 'Данные не верны', notificationColor: '#f22424', notificationVisible: true })
@@ -56,6 +89,10 @@ export default class LoginScreen extends Component {
           this.setState({ notificationVisible: false })
         }, 3000)
       })
+      .catch(res => {
+        console.log(res)
+        this.setState({ notification: 'Проблемы с сетью', notificationColor: '#f22424', notificationVisible: true })
+      })
   };
   componentDidUpdate() {
     Animated.timing(this._animatedNotification, {
@@ -63,7 +100,15 @@ export default class LoginScreen extends Component {
       duration: 200,
     }).start();
   }
+  componentDidMount() {
+    this.getNativeToken()
+  }
+  
   render() {
+    if(this.state.isNativeTokenNull === null){
+      this.getNativeToken();
+    }
+    console.log(this.props)
     const notificationBox = {
       backgroundColor: this.state.notificationColor,
       borderRadius: 4,
@@ -107,7 +152,8 @@ export default class LoginScreen extends Component {
             autoCorrect={false}
             secureTextEntry={true}
           />
-
+          {/*<Text>{this.props.username} - native user</Text>*/}
+          {/*<Text>{this.state.nativeToken} - native token</Text>*/}
           <View style={styles.btnBox}>
             <MyButton
               onPress={this.handleUserLoggedIn}

@@ -1,6 +1,7 @@
 export const SET_USER_USERNAME_VALUE = 'SET_USER_USERNAME_VALUE';
 export const SET_USER_PASSWORD_VALUE = 'SET_USER_PASSWORD_VALUE';
 export const SET_USER_TOKEN = 'SET_USER_TOKEN';
+export const SET_USER_NATIVE_TOKEN = 'SET_USER_NATIVE_TOKEN';
 export const SET_USER_LOGGED_IN = 'SET_USER_LOGGED_IN';
 export const SET_USER_LOGGED_OUT = 'SET_USER_LOGGED_OUT';
 export const SET_USER_LOADING_ON = 'SET_USER_LOADING_ON';
@@ -24,6 +25,11 @@ export const setUserPasswordValue = data => ({
 
 export const setUserToken = data => ({
     type: SET_USER_TOKEN,
+    payload: data
+});
+
+export const setUserNativeToken = data => ({
+    type: SET_USER_NATIVE_TOKEN,
     payload: data
 });
 

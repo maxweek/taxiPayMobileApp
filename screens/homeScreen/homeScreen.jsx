@@ -151,10 +151,10 @@ export default class HomeScreen extends Component {
       }),
       shadowOpacity: 0.2,
       shadowRadius: 2,
-      elevation: 3,
+      elevation: 5,
     }
     return (
-      <View style={{ flex: 1, position: 'relative' }}>
+      <View style={{ flex: 1, position: 'relative', backgroundColor: '#fff' }}>
         {this.state.status.showModal ? <Animated.View style={notificBox}>
           <Animated.View style={notificBoxInner}>
             <View

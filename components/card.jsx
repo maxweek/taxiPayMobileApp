@@ -82,8 +82,7 @@ export default class Card extends Component {
       },
       shadowOpacity: 0.2,
       shadowRadius: 2,
-
-      elevation: 3,
+      elevation: 5,
     };
     return (
       <TouchableWithoutFeedback

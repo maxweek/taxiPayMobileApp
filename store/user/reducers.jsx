@@ -2,6 +2,7 @@ import {
   SET_USER_LOGGED_IN,
   SET_USER_LOGGED_OUT,
   SET_USER_TOKEN,
+  SET_USER_NATIVE_TOKEN,
   SET_USER_USERNAME_VALUE,
   SET_USER_PASSWORD_VALUE,
   SET_USER_LOADING_ON,
@@ -18,6 +19,7 @@ export const defaultState = {
   username: "",
   password: "",
   token: "",
+  nativeToken: "",
   info: {
     isLoggedIn: false,
     isLoading: false,
@@ -47,6 +49,11 @@ export const userReducer = (state = defaultState, action) => {
       return {
         ...state,
         token: action.payload,
+      };
+    case SET_USER_NATIVE_TOKEN:
+      return {
+        ...state,
+        nativeToken: action.payload
       };
     case SET_USER_LOGGED_IN:
       return {

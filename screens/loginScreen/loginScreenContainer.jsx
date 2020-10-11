@@ -4,7 +4,8 @@ import {
   setUserPasswordValue,
   setUserLoggedIn,
   setUserLoadingOn,
-  setUserLoadingOff
+  setUserLoadingOff,
+  setUserNativeToken
 } from "../../store/user/actions";
 import { connect } from "react-redux";
 import LoginScreen from "./loginScreen";
@@ -24,6 +25,7 @@ class LoginScreenContainer extends Component {
         setUserLoggedIn={this.props.setUserLoggedIn}
         setUserLoadingOn={this.props.setUserLoadingOn}
         setUserLoadingOff={this.props.setUserLoadingOff}
+        setUserNativeToken={this.props.setUserNativeToken}
       />
     );
   }
@@ -41,7 +43,8 @@ const mapDispatchToProps = {
   setUserPasswordValue,
   setUserLoggedIn,
   setUserLoadingOn,
-  setUserLoadingOff
+  setUserLoadingOff,
+  setUserNativeToken,
 };
 
 export default connect(

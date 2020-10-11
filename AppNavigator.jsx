@@ -7,9 +7,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import RecoveryScreen from "./screens/recoveryScreen";
 import PolicyScreen from "./screens/policyScreen"
+import PassCodeScreen from "./screens/passCodeScreen"
 import LoginScreenContainer from "./screens/loginScreen/loginScreenContainer";
+import RequisitesScreenContainer from "./screens/requisitesScreen/requisitesScreenContainer";
 import { connect } from "react-redux";
 import RootNavigator from "./rootNavigator"
+import requisitesNavigator from "./requisitesNavigator";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -52,19 +55,32 @@ class AppNavigator extends React.Component {
               headerShown: true,
             }}
           />
+          <Stack.Screen
+            name="Код доступа"
+            component={PassCodeScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
         </Stack.Navigator>
       );
     } else {
       return (
+        // <RootNavigator />
         <Drawer.Navigator
           drawerPosition="right"
           drawerType="front"
           overlayColor="#290d40d6"
-          edgeWidth={Dimensions.get('window').width}
+          edgeWidth={Dimensions.get('window').width / 5}
           drawerStyle={styles.drawerWindow}
-        >
-          <Drawer.Screen name="Главная" component={RootNavigator} />
-          <Drawer.Screen name="Тест" component={PolicyScreen}/>
+          drawerContentOptions={{
+            activeTintColor: '#7f3cb5',
+            itemStyle: { paddingVertical: 5, marginVertical: 0 },
+          }}
+        > 
+          <Drawer.Screen name="Список аккаунтов" component={RootNavigator} />
+          <Drawer.Screen name="Реквизиты" component={requisitesNavigator} />
+          <Drawer.Screen name="Информация" component={PolicyScreen} />
         </Drawer.Navigator>
       );
     }
@@ -89,6 +105,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   drawerWindow: {
-    backgroundColor: '#f2f2f2'
+    backgroundColor: '#fff'
   }
 });

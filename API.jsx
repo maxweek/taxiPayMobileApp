@@ -26,5 +26,5 @@ export default axios.create({
         'Content-Type': 'multipart/form-data; charset=utf-8; boundary="another cool boundary";'
     },
     // baseURL: `http://cp.taxipay.antonov.site`,
-    baseURL: `http://drivermoney.online`,
+    baseURL: `https://drivermoney.online`,
 });

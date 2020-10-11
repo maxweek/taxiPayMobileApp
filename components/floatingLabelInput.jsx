@@ -46,6 +46,9 @@ export default class FloatingLabelInput extends Component {
       toValue: this.state.isEmpty ? 0 : 1,
       duration: 200,
     }).start();
+    if(this.state.value !== this.props.value && this.props.value !== ''){
+      this.setState({value: this.props.value, isEmpty: false})
+    }
   }
 
   onChangeText = (newText) => {

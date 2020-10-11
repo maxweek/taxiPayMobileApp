@@ -172,7 +172,7 @@ export default class WithDrawScreen extends Component {
     return (
       <ScrollView
         contentContainerStyle={{ paddingTop: 50, paddingBottom: 300 }}
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: '#fff' }}
         refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    elevation: 3,
+    elevation: 5,
   },
   moduleWithDraw: {
     width: Dimensions.get("window").width - 20,
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    elevation: 3,
+    elevation: 5,
   },
   moduleWithInput: {
     width: Dimensions.get("window").width - 40,

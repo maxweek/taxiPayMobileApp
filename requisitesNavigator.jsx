@@ -8,10 +8,11 @@ import confirmContainer from "./screens/confirmScreen/confirmContainer";
 import homeScreenContainer from "./screens/homeScreen/homeScreenContainer";
 import { connect } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import requisitesScreenContainer from "./screens/requisitesScreen/requisitesScreenContainer";
 
 const Stack = createStackNavigator();
 
-class RootNavigator extends React.Component {
+class RequisitesNavigator extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -24,8 +25,8 @@ class RootNavigator extends React.Component {
             <Stack.Navigator style={styles.container}
             >
                 <Stack.Screen
-                    name="Список аккаунтов"
-                    component={homeScreenContainer}
+                    name="Реквизиты"
+                    component={requisitesScreenContainer}
                     options={{
                         headerRight: (props) => {
                             return (
@@ -65,7 +66,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(RootNavigator);
+export default connect(mapStateToProps, mapDispatchToProps)(RequisitesNavigator);
 
 const styles = StyleSheet.create({
     container: {
