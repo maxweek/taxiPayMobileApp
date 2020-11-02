@@ -11,6 +11,8 @@ export const SET_USER_MONEY_TO_PAY_VALUE_RAW = 'SET_USER_MONEY_TO_PAY_VALUE_RAW'
 export const SET_USER_CARD_NUMBER_VALUE = 'SET_USER_CARD_NUMBER_VALUE';
 export const SET_USER_CARD_NUMBER_VALUE_RAW = 'SET_USER_CARD_NUMBER_VALUE_RAW';
 export const SET_USER_SELECTED_PAY_METHOD = 'SET_USER_SELECTED_PAY_METHOD';
+export const SET_USER_SELECTED_BANK_CARD = 'SET_USER_SELECTED_BANK_CARD';
+export const SET_USER_STORE_BANKCARD = 'SET_USER_STORE_BANKCARD';
 export const SET_USER_SELECTED_ACCOUNT = 'SET_USER_SELECTED_ACCOUNT';
 
 
@@ -68,6 +70,14 @@ export const setUserCardNumberValueRaw = data => ({
 });
 export const setUserSelectedPayMethod = data => ({
     type: SET_USER_SELECTED_PAY_METHOD,
+    payload: data
+});
+export const setUserSelectedBankCard = data => ({
+    type: SET_USER_SELECTED_BANK_CARD,
+    payload: data
+});
+export const setUserStoreBankCard = data => ({
+    type: SET_USER_STORE_BANKCARD,
     payload: data
 });
 export const setUserSelectedAccount = data => ({

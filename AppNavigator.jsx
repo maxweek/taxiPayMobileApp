@@ -80,7 +80,8 @@ class AppNavigator extends React.Component {
         > 
           <Drawer.Screen name="Список аккаунтов" component={RootNavigator} />
           <Drawer.Screen name="Реквизиты" component={requisitesNavigator} />
-          <Drawer.Screen name="Информация" component={PolicyScreen} />
+          <Drawer.Screen name="Подтверждение карты" component={PolicyScreen} />
+          {/* <Drawer.Screen name="Информация" component={PolicyScreen} /> */}
         </Drawer.Navigator>
       );
     }

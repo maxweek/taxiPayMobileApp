@@ -102,6 +102,7 @@ export default class HomeScreen extends Component {
       borderRadius: 5,
     };
     const statusBarText = {
+      textAlign: 'center',
       color: this.state.status.type === 1 ? 'black' : 'white',
     }
     const balanceBoxTextEnd = {

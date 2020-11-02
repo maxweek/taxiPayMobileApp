@@ -12,6 +12,8 @@ import {
   SET_USER_CARD_NUMBER_VALUE,
   SET_USER_CARD_NUMBER_VALUE_RAW,
   SET_USER_SELECTED_PAY_METHOD,
+  SET_USER_SELECTED_BANK_CARD,
+  SET_USER_STORE_BANKCARD,
   SET_USER_SELECTED_ACCOUNT
 } from "./actions";
 
@@ -29,6 +31,8 @@ export const defaultState = {
     cardNumber: '',
     cardNumberRaw: '',
     selectedMethod: '',
+    selectedBankCard: '',
+    storeBankCard: false,
     account: 0
   },
 };
@@ -125,6 +129,22 @@ export const userReducer = (state = defaultState, action) => {
         info: {
           ...state.info,
           selectedMethod: action.payload,
+        },
+      };
+    case SET_USER_SELECTED_BANK_CARD:
+      return {
+        ...state,
+        info: {
+          ...state.info,
+          selectedBankCard: action.payload,
+        },
+      };
+    case SET_USER_STORE_BANKCARD:
+      return {
+        ...state,
+        info: {
+          ...state.info,
+          storeBankCard: action.payload,
         },
       };
     case SET_USER_SELECTED_ACCOUNT:

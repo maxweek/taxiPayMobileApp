@@ -33,7 +33,7 @@ export default class Method extends Component {
         this.methodLogo = require("../assets/ico_method_qiwi.png");
         break;
       case 2:
-        this.methodLogo = require("../assets/ico_method_card.png");
+        this.methodLogo = require("../assets/ico_method_cards.png");
         break;
       // case 3:
       //   this.cardLogo = require("../../assets/uberLogo.png");
@@ -42,7 +42,7 @@ export default class Method extends Component {
       //   this.cardLogo = require("../../assets/gettaxiLogo.png");
       //   break;
       default:
-        this.methodLogo = require("../assets/ico_method_card.png");
+        this.methodLogo = require("../assets/ico_method_cards.png");
         break;
     }
   }

@@ -116,7 +116,7 @@ export default class FloatingLabelInput extends Component {
             } : this.props.maskTypeOptions}
             ref={ref => { this.input = ref }}
             style={inputStyles}
-            value={this.state.value}
+            value={this.props.value}
             onChangeText={this.onChangeText}
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
@@ -129,7 +129,7 @@ export default class FloatingLabelInput extends Component {
             <TextInput
               refInput={ref => { this.input = ref }}
               style={inputStyles}
-              value={this.state.value}
+              value={this.props.value}
               onChangeText={this.onChangeText}
               onFocus={this.handleFocus}
               onBlur={this.handleBlur}

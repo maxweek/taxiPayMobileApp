@@ -25,6 +25,17 @@ export default class ConfirmScreen extends Component {
 
     this.state = this.props.state;
     this.cardLogo = "";
+    let i = 0;
+    this.cardNumberRaw = this.state.user.info.cardNumberRaw ? this.state.user.info.cardNumberRaw : this.state.user.info.selectedBankCard.number;
+    this.cardNumberFormatted = this.state.user.info.cardNumber ? this.state.user.info.cardNumber : this.state.user.info.selectedBankCard.number;
+    for (let char of this.cardNumberFormatted) {
+      i++;
+      if (i === 4) {
+        char = char + " ";
+        i = 0;
+      }
+    }
+
     switch (this.state.user.info.account.aggregator.id) {
       case 1:
         this.cardLogo = require("../../assets/yandexLogo.png");
@@ -42,16 +53,18 @@ export default class ConfirmScreen extends Component {
         this.cardLogo = require("../../assets/taxiAppLogo.png");
         break;
     }
-    let i = 0;
-    this.cardNumberFormatted = this.state.user.info.cardNumber;
-    for (let char of this.cardNumberFormatted) {
-      i++;
-      if (i === 4) {
-        char = char + " ";
-        i = 0;
-      }
-    }
-    
+  }
+  setUserMoneyToPayValueRaw = text => {
+    this.props.setUserMoneyToPayValueRaw(text);
+  }
+  setUserCardNumberValueRaw = text => {
+    this.props.setUserCardNumberValueRaw(text);
+  }
+  setUserMoneyToPayValue = text => {
+    this.props.setUserMoneyToPayValue(text);
+  }
+  setUserCardNumberValue = text => {
+    this.props.setUserCardNumberValue(text);
   }
 
   onPress = () => {
@@ -69,6 +82,10 @@ export default class ConfirmScreen extends Component {
             message: res.data.message
           }
         });
+        this.setUserMoneyToPayValueRaw('')
+        this.setUserCardNumberValueRaw('')
+        this.setUserMoneyToPayValue('')
+        this.setUserCardNumberValue('')
       }
       if (res.data.type === 'error') {
         this.props.navigation.navigate("Список аккаунтов", {
@@ -87,9 +104,12 @@ export default class ConfirmScreen extends Component {
   sendRequest = () => {
     const formData = new FormData();
     formData.append('create_form[amount]', this.state.user.info.moneyToPayRaw)
-    formData.append('create_form[type]', this.state.user.info.selectedMethod.id)
-    formData.append('create_form[card]', this.state.user.info.cardNumberRaw)
-    
+    formData.append('create_form[type]', this.state.user.info.selectedMethod.type)
+    formData.append('create_form[card]', this.cardNumberRaw)
+    if (!this.state.user.info.selectedMethod.has_storage && this.state.user.info.cardNumber !== '') {
+      formData.append('create_form[saveCard]', this.state.user.info.storeBankCard)
+    }
+
     return API.post(API_USER_GET_MONEY + '/' + this.state.user.info.account.id, formData);
   }
   getComission = () => {
@@ -145,7 +165,7 @@ export default class ConfirmScreen extends Component {
             <Text style={isErrorMin}>
               {this.state.user.info.selectedMethod.min_payout === 0 ? (
                 'Без ограничений'
-              ) : this.state.user.info.selectedMethod.min_payout  + ' ₽'}
+              ) : this.state.user.info.selectedMethod.min_payout + ' ₽'}
             </Text>
           </View>
           <View style={styles.comissionLine}>
@@ -153,7 +173,7 @@ export default class ConfirmScreen extends Component {
             <Text style={isErrorMax}>
               {this.state.user.info.selectedMethod.max_payout === 0 ? (
                 'Без ограничений'
-              ) : this.state.user.info.selectedMethod.max_payout  + ' ₽'}
+              ) : this.state.user.info.selectedMethod.max_payout + ' ₽'}
             </Text>
           </View>
         </View>
@@ -269,7 +289,7 @@ export default class ConfirmScreen extends Component {
             classType="primary"
             withLoading="true"
             status="active"
-            onPress={edge.down && edge.up && this.cardNumberFormatted !== '' ? this.onPress : () => {this.props.navigation.goBack()}}
+            onPress={edge.down && edge.up && this.cardNumberFormatted !== '' ? this.onPress : () => { this.props.navigation.goBack() }}
           />
         </View>
       </ScrollView>
