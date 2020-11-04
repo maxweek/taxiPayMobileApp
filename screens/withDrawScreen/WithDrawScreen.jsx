@@ -13,6 +13,8 @@ import Method from "../../components/method";
 import API, { API_GET_METHODS, API_USER_BANKCARD_DELETE, API_USER_BANKCARD_STORAGE } from "../../API";
 import BankCard from "../../components/bankCard";
 
+let isBacky = false;
+
 export default class WithDrawScreen extends Component {
   constructor(props) {
     super(props);
@@ -55,8 +57,8 @@ export default class WithDrawScreen extends Component {
   refresh = () => {
     this.setState({ refreshing: true, methods: [], selectedMethod: null, bankCards: [], selectedBankCard: null });
     let cards = false;
+    isBacky = false;
     API.get(API_GET_METHODS + '/' + this.item.id).then(res => {
-      console.log(res.data)
       this.setState({ refreshing: false, methods: res.data })
     });
   };
@@ -65,7 +67,15 @@ export default class WithDrawScreen extends Component {
     this.refresh();
     this.checkContinueButtonStatus()
   }
-
+  componentDidUpdate() {
+    if (this.props.route.params !== undefined) {
+      if (this.props.route.params.status !== undefined) {
+        if (this.props.route.params.status === true && isBacky) {
+          this.refresh()
+        }
+      }
+    }
+  }
   setUserMoneyToPayValue = (newText) => {
     this.props.setUserMoneyToPayValue(newText);
     this.setState({ moneyToPayValue: newText },
@@ -96,6 +106,8 @@ export default class WithDrawScreen extends Component {
     this.setState({ methods: methods });
     this.setState({ selectedMethod: selectedMethodInArr, bankCards: selectedMethodInArr.cards }, () => {
       this.checkContinueButtonStatus();
+      this.setUserCardNumberValue('')
+      this.setUserCardNumberValueRaw('')
     });
     this.props.setUserSelectedPayMethod(selectedMethodInArr);
   };
@@ -123,20 +135,15 @@ export default class WithDrawScreen extends Component {
 
     let selectedBankCardInArr = bankCards.filter((bankCard) => (bankCard.id !== null ? bankCard.id : bankCard.external_id) === id)[0];
     let nonSelectedBankCardInArr = bankCards.filter((bankCard) => (bankCard.id !== null ? bankCard.id : bankCard.external_id) !== id);
-    console.log(this.state)
-    console.log(API_USER_BANKCARD_STORAGE + '/' + this.item.id + '/delete/' + selectedBankCardInArr.external_id)
     if (this.state.selectedMethod.has_storage) {
       let request = this.sendRequest(selectedBankCardInArr)
-      console.log('GJOPA')
       request.then(res => {
         console.log(res);
         this.setState({ bankCards: nonSelectedBankCardInArr, selectedBankCard: null });
-        this.refresh();
       })
     } else {
       API.delete(API_USER_BANKCARD_DELETE + '/' + selectedBankCardInArr.id).then(res => {
         this.setState({ bankCards: nonSelectedBankCardInArr, selectedBankCard: null });
-        this.refresh();
       })
     }
 
@@ -176,13 +183,13 @@ export default class WithDrawScreen extends Component {
     API.post(API_USER_BANKCARD_STORAGE + '/' + this.item.id, formData).then(res => {
       console.log(res.data)
       this.openWebView(res.data)
+      isBacky = true;
     })
   }
   openWebView = (data) => {
     this.props.navigation.navigate("Подтверждение карты", {
       data: data
     });
-
   }
 
   getNewBankCardId = () => {
@@ -411,23 +418,30 @@ export default class WithDrawScreen extends Component {
           ))}
         </View>
         {payOutBox}
-
+        <View style={styles.moduleWithDraw}>
+          <View style={styles.moduleHeaderWithDrawBox}>
+            <Text style={styles.moduleHeaderWithDraw}>Сумма вывода</Text>
+          </View>
+          <View style={styles.moduleWithInput}>
+            <FloatingLabelInput
+              maskType="money"
+              maskTypeOptions={{
+                precision: 0,
+                separator: ' ',
+                delimiter: ' ',
+                unit: '',
+                suffixUnit: ''
+              }}
+              label="Сумма вывода"
+              value={this.props.moneyToPay}
+              onChangeText={this.setUserMoneyToPayValue}
+              onChangeTextRaw={this.setUserMoneyToPayValueRaw}
+              keyboardType="numeric"
+            />
+          </View>
+        </View>
         <View style={styles.moduleWithInput}>
-          <FloatingLabelInput
-            maskType="money"
-            maskTypeOptions={{
-              precision: 0,
-              separator: ' ',
-              delimiter: ' ',
-              unit: '',
-              suffixUnit: ''
-            }}
-            label="Сумма вывода"
-            value={this.props.moneyToPay}
-            onChangeText={this.setUserMoneyToPayValue}
-            onChangeTextRaw={this.setUserMoneyToPayValueRaw}
-            keyboardType="numeric"
-          />
+
           <Text style={styles.balanceBoxStatusStyle}>{this.state.balanceBoxStatus}</Text>
         </View>
         <View style={styles.module}>
@@ -508,8 +522,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   moduleWithInput: {
-    width: Dimensions.get("window").width - 40,
-    marginHorizontal: 20,
+    width: Dimensions.get("window").width - 60,
+    marginHorizontal: 10,
     alignItems: "center",
     justifyContent: "center",
   },

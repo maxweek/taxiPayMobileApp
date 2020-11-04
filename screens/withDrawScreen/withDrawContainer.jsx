@@ -19,6 +19,7 @@ class WithDrawContainer extends Component {
     return (
       <WithDrawScreen
         navigation={this.props.navigation}
+        route={this.props.route}
         item={this.props.route.params.item}
         moneyToPay={this.props.moneyToPay}
         cardNumber={this.props.cardNumber}

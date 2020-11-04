@@ -20,7 +20,6 @@ export const apiTrashSID = () => {
     axios.defaults.headers.common['Cookie'] = {
         "PHPSESSID": null
     };
-    console.log(axios.defaults.headers)
 }
 
 export default axios.create({

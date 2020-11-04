@@ -108,7 +108,6 @@ export default class LoginScreen extends Component {
     if(this.state.isNativeTokenNull === null){
       this.getNativeToken();
     }
-    console.log(this.props)
     const notificationBox = {
       backgroundColor: this.state.notificationColor,
       borderRadius: 4,

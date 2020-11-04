@@ -87,6 +87,7 @@ export default class HomeScreen extends Component {
       this.setState({
         status: { ...this.state.status, showModal: false }
       })
+      this.refresh()
     }, 300)
   }
   handleUserLoggedOut = () => {

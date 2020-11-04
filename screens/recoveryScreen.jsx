@@ -35,11 +35,9 @@ export default class RecoveryScreen extends Component {
     this.setState({ phoneValue: newText });
   };
   handleCodeChange = (newText) => {
-    console.log(newText);
     this.setState({ code: newText });
   };
   handlePassChange = (newText) => {
-    console.log(newText);
     this.setState({ newPass: newText });
   };
   onPress = () => {

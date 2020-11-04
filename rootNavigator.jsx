@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import withDrawContainer from "./screens/withDrawScreen/withDrawContainer";
 import confirmContainer from "./screens/confirmScreen/confirmContainer";
 import homeScreenContainer from "./screens/homeScreen/homeScreenContainer";
+import AgreeCardScreen from "./screens/agreeCardScreen";
 import { connect } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -52,6 +53,7 @@ class RootNavigator extends React.Component {
                         headerBackTitle: "Назад",
                     }}
                 />
+                <Stack.Screen name="Подтверждение карты" component={AgreeCardScreen} />
             </Stack.Navigator>
         )
     }

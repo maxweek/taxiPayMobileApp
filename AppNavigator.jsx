@@ -7,6 +7,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import RecoveryScreen from "./screens/recoveryScreen";
 import PolicyScreen from "./screens/policyScreen"
+import AgreeCardScreen from "./screens/agreeCardScreen"
 import PassCodeScreen from "./screens/passCodeScreen"
 import LoginScreenContainer from "./screens/loginScreen/loginScreenContainer";
 import RequisitesScreenContainer from "./screens/requisitesScreen/requisitesScreenContainer";
@@ -27,10 +28,6 @@ class AppNavigator extends React.Component {
   }
 
   render() {
-    // if(this.props.state.user.info.isLoading){
-    //   return <LoadingScreen />
-    // }
-    console.log(Dimensions.get('window').width)
     if (!this.props.state.user.info.isLoggedIn) {
       return (
         <Stack.Navigator style={styles.container}>
@@ -79,8 +76,7 @@ class AppNavigator extends React.Component {
           }}
         > 
           <Drawer.Screen name="Список аккаунтов" component={RootNavigator} />
-          <Drawer.Screen name="Реквизиты" component={requisitesNavigator} />
-          <Drawer.Screen name="Подтверждение карты" component={PolicyScreen} />
+          <Drawer.Screen name="Справка" component={PolicyScreen} />
           {/* <Drawer.Screen name="Информация" component={PolicyScreen} /> */}
         </Drawer.Navigator>
       );
