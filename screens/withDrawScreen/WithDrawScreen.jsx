@@ -33,25 +33,25 @@ export default class WithDrawScreen extends Component {
       moneyToPayValue: this.props.moneyToPay,
       check: false
     };
-    this.cardLogo = "";
+    this.cardLogo = require("../../assets/taxiAppLogo_coloredMin.png");
     this.checkLogo = require("../../assets/okIcon_white.png");
-    switch (this.item.aggregator.type) {
-      case 1:
-        this.cardLogo = require("../../assets/yandexLogo.png");
-        break;
-      // case 2:
-      //   this.cardLogo = require("../../assets/citimobilLogo.png");
-      //   break;
-      // case 3:
-      //   this.cardLogo = require("../../assets/uberLogo.png");
-      //   break;
-      // case 4:
-      //   this.cardLogo = require("../../assets/gettaxiLogo.png");
-      //   break;
-      default:
-        this.cardLogo = require("../../assets/taxiAppLogo.png");
-        break;
-    }
+    // switch (this.item.aggregator.type) {
+    //   case 1:
+    //     this.cardLogo = require("../../assets/yandexLogo.png");
+    //     break;
+    //   // case 2:
+    //   //   this.cardLogo = require("../../assets/citimobilLogo.png");
+    //   //   break;
+    //   // case 3:
+    //   //   this.cardLogo = require("../../assets/uberLogo.png");
+    //   //   break;
+    //   // case 4:
+    //   //   this.cardLogo = require("../../assets/gettaxiLogo.png");
+    //   //   break;
+    //   default:
+    //     this.cardLogo = require("../../assets/taxiAppLogo.png");
+    //     break;
+    // }
   }
 
   refresh = () => {
@@ -384,7 +384,7 @@ export default class WithDrawScreen extends Component {
         }
       >
         <View style={styles.pageHeaderBox}>
-          <Text style={styles.pageHeader}>{this.item.aggregator.name}</Text>
+          {/* <Text style={styles.pageHeader}>{this.item.aggregator.name}</Text> */}
           <Image style={styles.pageHeaderImage} source={this.cardLogo} />
         </View>
 
@@ -466,6 +466,7 @@ export default class WithDrawScreen extends Component {
 const styles = StyleSheet.create({
   pageHeaderBox: {
     position: "relative",
+    alignItems: 'center'
   },
   pageHeader: {
     fontSize: 30,
@@ -475,13 +476,18 @@ const styles = StyleSheet.create({
     position: "relative",
     zIndex: 20,
   },
-  pageHeaderImage: {
-    position: "absolute",
+  pageHeaderImage_old: {
+    position: "relative",
     width: 170,
     height: 170,
     top: -32,
     right: -20,
     opacity: 0.2,
+  },
+  pageHeaderImage: {
+    width: 220,
+    height: 66,
+    marginBottom: 5,
   },
   module: {
     width: Dimensions.get("window").width - 20,

@@ -63,22 +63,22 @@ class AppNavigator extends React.Component {
       );
     } else {
       return (
-        // <RootNavigator />
-        <Drawer.Navigator
-          drawerPosition="right"
-          drawerType="front"
-          overlayColor="#290d40d6"
-          edgeWidth={Dimensions.get('window').width / 5}
-          drawerStyle={styles.drawerWindow}
-          drawerContentOptions={{
-            activeTintColor: '#7f3cb5',
-            itemStyle: { paddingVertical: 5, marginVertical: 0 },
-          }}
-        > 
-          <Drawer.Screen name="Список аккаунтов" component={RootNavigator} />
-          <Drawer.Screen name="Справка" component={PolicyScreen} />
-          {/* <Drawer.Screen name="Информация" component={PolicyScreen} /> */}
-        </Drawer.Navigator>
+        <RootNavigator />
+        // <Drawer.Navigator
+        //   drawerPosition="right"
+        //   drawerType="front"
+        //   overlayColor="#290d40d6"
+        //   edgeWidth={Dimensions.get('window').width / 5}
+        //   drawerStyle={styles.drawerWindow}
+        //   drawerContentOptions={{
+        //     activeTintColor: '#7f3cb5',
+        //     itemStyle: { paddingVertical: 5, marginVertical: 0 },
+        //   }}
+        // > 
+        //   <Drawer.Screen name="Список аккаунтов" component={RootNavigator} />
+        //   <Drawer.Screen name="Справка" component={PolicyScreen} />
+        //   {/* <Drawer.Screen name="Информация" component={PolicyScreen} /> */}
+        // </Drawer.Navigator>
       );
     }
   }
