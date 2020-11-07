@@ -24,7 +24,7 @@ export default class ConfirmScreen extends Component {
     super(props);
 
     this.state = this.props.state;
-    this.cardLogo = "";
+    this.cardLogo = require("../../assets/taxiAppLogo_coloredMin.png");
     let i = 0;
     this.cardNumberRaw = this.state.user.info.cardNumberRaw ? this.state.user.info.cardNumberRaw : this.state.user.info.selectedBankCard.number;
     this.cardNumberFormatted = this.state.user.info.cardNumber ? this.state.user.info.cardNumber : this.state.user.info.selectedBankCard.number;
@@ -36,23 +36,23 @@ export default class ConfirmScreen extends Component {
       }
     }
 
-    switch (this.state.user.info.account.aggregator.id) {
-      case 1:
-        this.cardLogo = require("../../assets/yandexLogo.png");
-        break;
-      case 2:
-        this.cardLogo = require("../../assets/citimobilLogo.png");
-        break;
-      case 3:
-        this.cardLogo = require("../../assets/uberLogo.png");
-        break;
-      case 4:
-        this.cardLogo = require("../../assets/gettaxiLogo.png");
-        break;
-      default:
-        this.cardLogo = require("../../assets/taxiAppLogo.png");
-        break;
-    }
+    // switch (this.state.user.info.account.aggregator.id) {
+    //   case 1:
+    //     this.cardLogo = require("../../assets/yandexLogo.png");
+    //     break;
+    //   case 2:
+    //     this.cardLogo = require("../../assets/citimobilLogo.png");
+    //     break;
+    //   case 3:
+    //     this.cardLogo = require("../../assets/uberLogo.png");
+    //     break;
+    //   case 4:
+    //     this.cardLogo = require("../../assets/gettaxiLogo.png");
+    //     break;
+    //   default:
+    //     this.cardLogo = require("../../assets/taxiAppLogo.png");
+    //     break;
+    // }
   }
   setUserMoneyToPayValueRaw = text => {
     this.props.setUserMoneyToPayValueRaw(text);
@@ -182,12 +182,12 @@ export default class ConfirmScreen extends Component {
     return (
       <ScrollView
         contentContainerStyle={{ paddingTop: 50, paddingBottom: 300 }}
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: 'white' }}
       >
         <View style={styles.pageHeaderBox}>
-          <Text style={styles.pageHeader}>
+          {/* <Text style={styles.pageHeader}>
             {this.state.user.info.account.aggregator.name}
-          </Text>
+          </Text> */}
           <Image style={styles.pageHeaderImage} source={this.cardLogo} />
         </View>
         <View style={styles.module}>
@@ -299,6 +299,7 @@ export default class ConfirmScreen extends Component {
 const styles = StyleSheet.create({
   pageHeaderBox: {
     position: "relative",
+    alignItems: 'center'
   },
   pageHeader: {
     fontSize: 30,
@@ -308,13 +309,18 @@ const styles = StyleSheet.create({
     position: "relative",
     zIndex: 20,
   },
-  pageHeaderImage: {
-    position: "absolute",
+  pageHeaderImage_old: {
+    position: "relative",
     width: 170,
     height: 170,
     top: -32,
     right: -20,
     opacity: 0.2,
+  },
+  pageHeaderImage: {
+    width: 220,
+    height: 66,
+    marginBottom: 5,
   },
   module: {
     width: Dimensions.get("window").width - 20,

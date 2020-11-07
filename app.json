@@ -2,12 +2,13 @@
   "expo": {
     "name": "DriverMoney",
     "slug": "drivermoney",
+    "sdkVersion": "39.0.0",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/taxiAppLogo.png",
     "splash": {
@@ -28,7 +29,7 @@
     },
     "android": {
       "package": "online.drivermoney.app",
-      "versionCode": 1
+      "versionCode": 5
     },
     "description": "DriverMoney App for taxi-drivers",
     "githubUrl": "https://github.com/maxweek/taxiPayMobileApp"
