@@ -108,14 +108,25 @@ export default class WithDrawScreen extends Component {
       this.checkContinueButtonStatus();
       this.setUserCardNumberValue('')
       this.setUserCardNumberValueRaw('')
+
+      this.props.setUserSelectedPayMethod(selectedMethodInArr);
+      if (selectedMethodInArr.cards !== undefined) {
+        if (selectedMethodInArr.cards.length > 0) {
+          // console.log(selectedMethodInArr.cards[0])
+          this.onBankCardSelect(selectedMethodInArr.cards[0].id !== null ? selectedMethodInArr.cards[0].id : selectedMethodInArr.cards[0].external_id);
+        }
+      }
     });
-    this.props.setUserSelectedPayMethod(selectedMethodInArr);
+    // this.onBankCardSelect(selectedMethodInArr)
+
   };
 
   onBankCardSelect = (id) => {
+    console.log("ID " + id)
     let bankCards = [...this.state.bankCards];
-
     let selectedBankCardInArr = bankCards.filter((bankCard) => (bankCard.id !== null ? bankCard.id : bankCard.external_id) === id)[0];
+    console.log(bankCards)
+    console.log(selectedBankCardInArr)
     let nonSelectedBankCardInArr = bankCards.filter((bankCard) => (bankCard.id !== null ? bankCard.id : bankCard.external_id) !== id);
 
     selectedBankCardInArr.isSelected = true;
@@ -125,6 +136,8 @@ export default class WithDrawScreen extends Component {
 
     this.setState({ bankCards: bankCards });
     this.setState({ selectedBankCard: selectedBankCardInArr }, () => {
+      this.setUserCardNumberValue(selectedBankCardInArr.number)
+      this.setUserCardNumberValueRaw(selectedBankCardInArr.number)
       this.checkContinueButtonStatus();
     });
     this.props.setUserSelectedBankCard(selectedBankCardInArr);
@@ -146,8 +159,7 @@ export default class WithDrawScreen extends Component {
         this.setState({ bankCards: nonSelectedBankCardInArr, selectedBankCard: null });
       })
     }
-
-
+    this.checkContinueButtonStatus();
   }
   sendRequest = (selectedBankCardInArr) => {
 
@@ -225,22 +237,28 @@ export default class WithDrawScreen extends Component {
   }
 
   checkContinueButtonStatus = () => {
+    // console.log(this.props)
     if (this.state.moneyToPayValue < this.item.balance) {
       this.setState({ balanceBoxStatus: "" })
       if (this.state.selectedMethod !== null) {
         if (this.props.moneyToPay !== '') {
           if (this.props.cardNumber !== '') {
             this.setState({ continueButtonStatus: "active" })
+            console.log("active")
           } else {
+            console.log("disabled1")
             this.setState({ continueButtonStatus: "disabled" })
           }
         } else {
+          console.log("disabled2")
           this.setState({ continueButtonStatus: "disabled" })
         }
       } else {
+        console.log("disabled3")
         this.setState({ continueButtonStatus: "disabled" })
       }
     } else {
+      console.log("disabled4")
       this.setState({ continueButtonStatus: "disabled", balanceBoxStatus: "Сумма не должна превышать ваш текущий баланс" })
     }
   }
@@ -455,7 +473,7 @@ export default class WithDrawScreen extends Component {
             title="Продолжить"
             classType="primary"
             withLoading="true"
-            status="active"
+            status={this.state.continueButtonStatus}
             onPress={() => this.props.navigation.navigate('Подтверждение')}
           />
         </View>

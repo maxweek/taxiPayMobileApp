@@ -8,25 +8,32 @@ let timer;
 export default class AgreeCardScreen extends Component {
   constructor(props) {
     super(props);
+    console.log()
+    // this.props.navigation)
+    this.props.navigation.goBack = () => {
+      clearTimeout(timer)
+      this.props.navigation.goBack()
+    }
   }
   sendRequest = () => {
     return API.post(API_USER_BANKCARD_STORAGE_CHECK + '/' + this.props.route.params.data.id)
   }
   setPolling = () => {
-    
+
     timer = setTimeout(() => {
       let request = this.sendRequest()
       request.then(res => {
         console.log(res.data)
-        if(res.data.type === 'success' || res.data.type === 'error'){
+        if (res.data.type === 'success' || res.data.type === 'error') {
           clearTimeout(timer)
-          this.props.navigation.navigate("Вывод средств", {status: true})
+          this.props.navigation.navigate("Вывод средств", { status: true })
         } else {
           this.setPolling()
         }
       })
     }, 3000)
   }
+
   componentWillUnmount() {
     clearTimeout(timer)
   }

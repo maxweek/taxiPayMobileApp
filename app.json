@@ -2,7 +2,6 @@
   "expo": {
     "name": "DriverMoney",
     "slug": "drivermoney",
-    "sdkVersion": "39.0.0",
     "platforms": [
       "ios",
       "android",
