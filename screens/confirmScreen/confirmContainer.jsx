@@ -5,6 +5,8 @@ import {
   setUserSelectedPayMethod,
   setUserMoneyToPayValueRaw,
   setUserCardNumberValueRaw,
+  setUserStoreBankCard,
+  setUserForcePay
 } from "../../store/user/actions";
 import { connect } from "react-redux";
 import ConfirmScreen from "./confirmScreen";
@@ -22,6 +24,8 @@ class ConfirmContainer extends Component {
         setUserCardNumberValueRaw={this.props.setUserCardNumberValueRaw}
         setUserMoneyToPayValue={this.props.setUserMoneyToPayValue}
         setUserCardNumberValue={this.props.setUserCardNumberValue}
+        setUserStoreBankCard={this.props.setUserStoreBankCard}
+        setUserForcePay={this.props.setUserForcePay}
       />
     );
   }
@@ -38,6 +42,8 @@ const mapDispatchToProps = {
   setUserMoneyToPayValueRaw,
   setUserMoneyToPayValue,
   setUserCardNumberValue,
+  setUserStoreBankCard,
+  setUserForcePay
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConfirmContainer);

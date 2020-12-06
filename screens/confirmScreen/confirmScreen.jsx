@@ -66,6 +66,12 @@ export default class ConfirmScreen extends Component {
   setUserCardNumberValue = text => {
     this.props.setUserCardNumberValue(text);
   }
+  setUserStoreBankCard = type => {
+    this.props.setUserStoreBankCard(type)
+  }
+  setUserForcePay = type => {
+    this.props.setUserForcePay(type)
+  }
 
   onPress = () => {
     let request = this.sendRequest();
@@ -82,10 +88,12 @@ export default class ConfirmScreen extends Component {
             message: res.data.message
           }
         });
-        this.setUserMoneyToPayValueRaw('')
+        this.setUserMoneyToPayValueRaw(0)
         this.setUserCardNumberValueRaw('')
         this.setUserMoneyToPayValue('')
         this.setUserCardNumberValue('')
+        this.setUserStoreBankCard(false)
+        this.setUserForcePay(false)
       }
       if (res.data.type === 'error') {
         this.props.navigation.navigate("Список аккаунтов", {
@@ -106,7 +114,14 @@ export default class ConfirmScreen extends Component {
     formData.append('create_form[amount]', this.state.user.info.moneyToPayRaw)
     formData.append('create_form[type]', this.state.user.info.selectedMethod.type)
     formData.append('create_form[card]', this.cardNumberRaw)
-    if (!this.state.user.info.selectedMethod.has_storage && this.state.user.info.cardNumber !== '') {
+    if (this.state.user.info.forcePay) {
+      formData.append('create_form[forced]', this.state.user.info.forcePay)
+    }
+    console.log(!this.state.user.info.selectedMethod.has_storage)
+    console.log(this.state.user.info.cardNumber !== '')
+    console.log(this.state.user.info.storeBankCard)
+    console.log(!this.state.user.info.selectedMethod.has_storage && this.state.user.info.cardNumber !== '')
+    if (!this.state.user.info.selectedMethod.has_storage && this.state.user.info.cardNumber !== '' && this.state.user.info.storeBankCard) {
       formData.append('create_form[saveCard]', this.state.user.info.storeBankCard)
     }
 
@@ -120,12 +135,12 @@ export default class ConfirmScreen extends Component {
     );
   };
   getEndSummToPay = () => {
+    let comission = this.state.user.info.selectedMethod.fixed_commission > this.state.user.info.selectedMethod.min_commission ? this.state.user.info.selectedMethod.fixed_commission : this.state.user.info.selectedMethod.min_commission;
     let summ = (
-      this.state.user.info.moneyToPayRaw +
-      this.getComission() +
-      this.state.user.info.selectedMethod.fixed_commission
+      this.state.user.info.moneyToPayRaw + this.getComission() + comission
     );
-    summ = Math.ceil(summ * 100) / 100
+    // summ = Math.ceil(summ * 100) / 100
+    summ = summ.toFixed(2)
     return summ;
   };
   render() {
@@ -158,6 +173,12 @@ export default class ConfirmScreen extends Component {
             <Text style={styles.commissionText}>Фиксированная комиссия:</Text>
             <Text>
               {this.state.user.info.selectedMethod.fixed_commission} ₽
+            </Text>
+          </View>
+          <View style={styles.comissionLine}>
+            <Text style={styles.commissionText}>Минимальная комиссия:</Text>
+            <Text>
+              {this.state.user.info.selectedMethod.min_commission} ₽
             </Text>
           </View>
           <View style={styles.comissionLine}>
@@ -296,6 +317,7 @@ export default class ConfirmScreen extends Component {
     );
   }
 }
+
 const styles = StyleSheet.create({
   pageHeaderBox: {
     position: "relative",

@@ -14,7 +14,8 @@ import {
   SET_USER_SELECTED_PAY_METHOD,
   SET_USER_SELECTED_BANK_CARD,
   SET_USER_STORE_BANKCARD,
-  SET_USER_SELECTED_ACCOUNT
+  SET_USER_SELECTED_ACCOUNT,
+  SET_USER_FORCE_PAY
 } from "./actions";
 
 export const defaultState = {
@@ -27,12 +28,13 @@ export const defaultState = {
     isLoading: false,
     name: "",
     moneyToPay: '',
-    moneyToPayRaw: '',
+    moneyToPayRaw: 0,
     cardNumber: '',
     cardNumberRaw: '',
     selectedMethod: '',
     selectedBankCard: '',
     storeBankCard: false,
+    forcePay: false,
     account: 0
   },
 };
@@ -145,6 +147,15 @@ export const userReducer = (state = defaultState, action) => {
         info: {
           ...state.info,
           storeBankCard: action.payload,
+        },
+      };
+    case SET_USER_FORCE_PAY:
+
+      return {
+        ...state,
+        info: {
+          ...state.info,
+          forcePay: action.payload,
         },
       };
     case SET_USER_SELECTED_ACCOUNT:

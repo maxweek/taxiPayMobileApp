@@ -6,6 +6,7 @@ import {
   setUserCardNumberValueRaw,
   setUserSelectedPayMethod,
   setUserStoreBankCard,
+  setUserForcePay,
   setUserSelectedBankCard,
 } from "../../store/user/actions";
 import { connect } from "react-redux";
@@ -22,6 +23,8 @@ class WithDrawContainer extends Component {
         route={this.props.route}
         item={this.props.route.params.item}
         moneyToPay={this.props.moneyToPay}
+        moneyToPayRaw={this.props.moneyToPayRaw}
+        forcePay={this.props.forcePay}
         cardNumber={this.props.cardNumber}
         storeBankCard={this.props.storeBankCard}
         setUserMoneyToPayValue={this.props.setUserMoneyToPayValue}
@@ -30,6 +33,7 @@ class WithDrawContainer extends Component {
         setUserCardNumberValueRaw={this.props.setUserCardNumberValueRaw}
         setUserSelectedPayMethod={this.props.setUserSelectedPayMethod}
         setUserSelectedBankCard={this.props.setUserSelectedBankCard}
+        setUserForcePay={this.props.setUserForcePay}
         setUserStoreBankCard={this.props.setUserStoreBankCard}
       />
     );
@@ -39,7 +43,9 @@ class WithDrawContainer extends Component {
 const mapStateToProps = (state) => {
   return {
     moneyToPay: state.user.info.moneyToPay,
+    moneyToPayRaw: state.user.info.moneyToPayRaw,
     cardNumber: state.user.info.cardNumber,
+    forcePay: state.user.info.forcePay,
     storeBankCard: state.user.info.storeBankCard,
   };
 };
@@ -51,7 +57,8 @@ const mapDispatchToProps = {
   setUserCardNumberValueRaw,
   setUserSelectedPayMethod,
   setUserStoreBankCard,
-  setUserSelectedBankCard
+  setUserSelectedBankCard,
+  setUserForcePay
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(WithDrawContainer);

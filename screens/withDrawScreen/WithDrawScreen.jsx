@@ -20,6 +20,7 @@ export default class WithDrawScreen extends Component {
     super(props);
     this.setUserSelectedPayMethod = this.props.setUserSelectedPayMethod.bind(this);
     this.setUserStoreBankCard = this.props.setUserStoreBankCard.bind(this);
+    this.setUserForcePay = this.props.setUserForcePay.bind(this);
 
     this.item = this.props.item;
     this.state = {
@@ -31,8 +32,10 @@ export default class WithDrawScreen extends Component {
       continueButtonStatus: 'disabled',
       balanceBoxStatus: true,
       moneyToPayValue: this.props.moneyToPay,
+      moneyToPayValueRaw: this.props.moneyToPayRaw,
       check: false
     };
+    this.isMoreBackup = 0;
     this.cardLogo = require("../../assets/taxiAppLogo_coloredMin.png");
     this.checkLogo = require("../../assets/okIcon_white.png");
     // switch (this.item.aggregator.type) {
@@ -59,8 +62,12 @@ export default class WithDrawScreen extends Component {
     let cards = false;
     isBacky = false;
     API.get(API_GET_METHODS + '/' + this.item.id).then(res => {
+      console.log(res.data)
       this.setState({ refreshing: false, methods: res.data })
     });
+    this.isMoreBackup = this.props.item.available_requests;
+    console.log(this.isMoreBackup)
+    this.checkContinueButtonStatus()
   };
 
   componentDidMount() {
@@ -86,7 +93,12 @@ export default class WithDrawScreen extends Component {
     this.checkContinueButtonStatus();
   };
   setUserMoneyToPayValueRaw = (newText) => {
+    if (isNaN(newText)) {
+      newText = 0;
+    }
     this.props.setUserMoneyToPayValueRaw(newText);
+    this.setState({ moneyToPayValueRaw: newText },
+      () => { this.checkContinueButtonStatus() });
   };
   setUserCardNumberValueRaw = (newText) => {
     this.props.setUserCardNumberValueRaw(newText);
@@ -113,7 +125,9 @@ export default class WithDrawScreen extends Component {
       if (selectedMethodInArr.cards !== undefined) {
         if (selectedMethodInArr.cards.length > 0) {
           // console.log(selectedMethodInArr.cards[0])
-          this.onBankCardSelect(selectedMethodInArr.cards[0].id !== null ? selectedMethodInArr.cards[0].id : selectedMethodInArr.cards[0].external_id);
+          setTimeout(() => {
+            this.onBankCardSelect(selectedMethodInArr.cards[0].id !== null ? selectedMethodInArr.cards[0].id : selectedMethodInArr.cards[0].external_id);
+          }, 50)
         }
       }
     });
@@ -122,11 +136,11 @@ export default class WithDrawScreen extends Component {
   };
 
   onBankCardSelect = (id) => {
-    console.log("ID " + id)
+    // console.log("ID " + id)
     let bankCards = [...this.state.bankCards];
     let selectedBankCardInArr = bankCards.filter((bankCard) => (bankCard.id !== null ? bankCard.id : bankCard.external_id) === id)[0];
-    console.log(bankCards)
-    console.log(selectedBankCardInArr)
+    // console.log(bankCards)
+    // console.log(selectedBankCardInArr)
     let nonSelectedBankCardInArr = bankCards.filter((bankCard) => (bankCard.id !== null ? bankCard.id : bankCard.external_id) !== id);
 
     selectedBankCardInArr.isSelected = true;
@@ -138,7 +152,9 @@ export default class WithDrawScreen extends Component {
     this.setState({ selectedBankCard: selectedBankCardInArr }, () => {
       this.setUserCardNumberValue(selectedBankCardInArr.number)
       this.setUserCardNumberValueRaw(selectedBankCardInArr.number)
-      this.checkContinueButtonStatus();
+      setTimeout(() => {
+        this.checkContinueButtonStatus();
+      }, 50)
     });
     this.props.setUserSelectedBankCard(selectedBankCardInArr);
   };
@@ -235,31 +251,48 @@ export default class WithDrawScreen extends Component {
       this.setUserStoreBankCard(true);
     }
   }
+  toggleForce = () => {
+    if (this.props.forcePay) {
+      this.setUserForcePay(false);
+    } else {
+      this.setUserForcePay(true);
+    }
+  }
 
   checkContinueButtonStatus = () => {
     // console.log(this.props)
-    if (this.state.moneyToPayValue < this.item.balance) {
-      this.setState({ balanceBoxStatus: "" })
-      if (this.state.selectedMethod !== null) {
-        if (this.props.moneyToPay !== '') {
-          if (this.props.cardNumber !== '') {
-            this.setState({ continueButtonStatus: "active" })
-            console.log("active")
+    if (this.props.item.available_requests < 1 && this.props.item.available_requests !== null) {
+      this.setState({ continueButtonStatus: "disabled", balanceBoxStatus: "Доступный лимит запросов исчерпан" })
+    } else {
+      // console.log(parseInt(this.state.moneyToPayValueRaw))
+      // console.log(this.item.balance)
+      setTimeout(() => {
+        console.log(this.state.moneyToPayValueRaw)
+
+        if (parseInt(this.state.moneyToPayValueRaw) < parseInt(this.item.balance)) {
+          this.setState({ balanceBoxStatus: "" })
+          if (this.state.selectedMethod !== null) {
+            if (this.props.moneyToPayValueRaw !== '' && this.state.moneyToPayValueRaw !== NaN) {
+              if (this.props.cardNumber !== '') {
+                this.setState({ continueButtonStatus: "active", balanceBoxStatus: "" })
+                console.log("active")
+              } else {
+                console.log("disabled1")
+                this.setState({ continueButtonStatus: "disabled", balanceBoxStatus: "Номер карты не введён" })
+              }
+            } else {
+              console.log("disabled2")
+              this.setState({ continueButtonStatus: "disabled", balanceBoxStatus: "Некорректная сумма вывода" })
+            }
           } else {
-            console.log("disabled1")
-            this.setState({ continueButtonStatus: "disabled" })
+            console.log("disabled3")
+            this.setState({ continueButtonStatus: "disabled", balanceBoxStatus: "Не выбран способ оплаты" })
           }
         } else {
-          console.log("disabled2")
-          this.setState({ continueButtonStatus: "disabled" })
+          console.log("disabled4")
+          this.setState({ continueButtonStatus: "disabled", balanceBoxStatus: "Сумма не должна превышать ваш текущий баланс" })
         }
-      } else {
-        console.log("disabled3")
-        this.setState({ continueButtonStatus: "disabled" })
-      }
-    } else {
-      console.log("disabled4")
-      this.setState({ continueButtonStatus: "disabled", balanceBoxStatus: "Сумма не должна превышать ваш текущий баланс" })
+      }, 10)
     }
   }
 
@@ -282,6 +315,20 @@ export default class WithDrawScreen extends Component {
     let storeCardStyleImage = {
       opacity: this.props.storeBankCard ? 1 : 0
     }
+    let forcePayStyle = {
+      width: 22,
+      height: 22,
+      borderRadius: 4,
+      borderStyle: 'solid',
+      borderWidth: 2,
+      borderColor: '#7f3cb5',
+      alignItems: "center",
+      backgroundColor: this.props.forcePay ? "#7f3cb5" : "transparent",
+      justifyContent: "center",
+    }
+    let forcePayStyleImage = {
+      opacity: this.props.forcePay ? 1 : 0
+    }
     if (this.state.selectedMethod === null) {
       commissionBox = (
         <Text style={{ width: "100%", textAlign: "center" }}>
@@ -295,28 +342,31 @@ export default class WithDrawScreen extends Component {
             style={{ justifyContent: "space-between", flexDirection: "row" }}
           >
             <Text style={styles.commissionText}>
+              Макс. выплата: {this.state.selectedMethod.max_payout} ₽
+            </Text>
+            <Text style={styles.commissionText}>
               Комиссия: {this.state.selectedMethod.commission} %
+            </Text>
+          </View>
+          <View
+            style={[styles.comissionLine, { justifyContent: "space-between", flexDirection: "row" }]}
+          >
+            <Text style={styles.commissionText}>
+              Мин. выплата: {this.state.selectedMethod.min_payout} ₽
             </Text>
             <Text style={styles.commissionText}>
               Фикс. комиссия: {this.state.selectedMethod.fixed_commission} ₽
             </Text>
           </View>
-          <View>
-            <View style={styles.comissionLine}>
-              <Text style={styles.commissionText}>
-                Мин. выплата: {this.state.selectedMethod.min_payout} ₽
+          <View
+            style={[styles.comissionLine, { justifyContent: "space-between", flexDirection: "row" }]}
+          >
+            <Text style={styles.commissionText}>
+              Мин. остаток: {this.state.selectedMethod.min_residue} ₽
               </Text>
-            </View>
-            <View style={styles.comissionLine}>
-              <Text style={styles.commissionText}>
-                Макс. выплата: {this.state.selectedMethod.max_payout} ₽
-              </Text>
-            </View>
-            <View style={styles.comissionLine}>
-              <Text style={styles.commissionText}>
-                Мин. остаток: {this.state.selectedMethod.min_residue} ₽
-              </Text>
-            </View>
+            <Text style={styles.commissionText}>
+              Мин. комиссия: {this.state.selectedMethod.min_commission} ₽
+            </Text>
           </View>
         </View>
       );
@@ -372,9 +422,7 @@ export default class WithDrawScreen extends Component {
                 </TouchableOpacity>
               ) : null}
             </View>
-
           ) : (
-
               <View style={{ marginTop: 10 }}>
                 <MyButton
                   title="Привязать"
@@ -385,8 +433,6 @@ export default class WithDrawScreen extends Component {
                 />
               </View>
             )}
-
-
         </View>
       )
     }
@@ -437,7 +483,15 @@ export default class WithDrawScreen extends Component {
         </View>
         {payOutBox}
         <View style={styles.moduleWithDraw}>
-          <View style={styles.moduleHeaderWithDrawBox}>
+          <View style={[styles.moduleHeaderWithDrawBox, { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }]}>
+            {this.props.item.available_requests !== null ? (
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text>
+                  Доступных заявок:
+                </Text>
+                <View style={[styles.statusBarBox, { backgroundColor: this.isMoreBackup < 1 ? "#f24a24" : "#bbf224" }]}><Text style={[styles.statusBarText, { color: this.isMoreBackup < 1 ? 'white' : 'black' }]}>{this.props.item.available_requests}</Text></View>
+              </View>
+            ) : null}
             <Text style={styles.moduleHeaderWithDraw}>Сумма вывода</Text>
           </View>
           <View style={styles.moduleWithInput}>
@@ -458,15 +512,36 @@ export default class WithDrawScreen extends Component {
             />
           </View>
         </View>
-        <View style={styles.moduleWithInput}>
-
-          <Text style={styles.balanceBoxStatusStyle}>{this.state.balanceBoxStatus}</Text>
-        </View>
         <View style={styles.module}>
           <View style={styles.moduleHeaderBox}>
             <Text style={styles.moduleHeader}>Комиссия</Text>
           </View>
           {commissionBox}
+        </View>
+        <View>
+
+          <TouchableOpacity
+            onPress={this.toggleForce}>
+            <View style={{
+              padding: 10,
+              marginHorizontal: 30,
+              marginTop: 15,
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}>
+              <View style={{ flex: 1 }}>
+                <Text>Отправить на ручную обработку</Text>
+              </View>
+              <View style={forcePayStyle}>
+                <Image
+                  style={forcePayStyleImage}
+                  source={this.checkLogo} />
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.balanceBoxStatusStyleBox}>
+          <Text style={styles.balanceBoxStatusStyle}>{this.state.balanceBoxStatus}</Text>
         </View>
         <View style={{ margin: 20 }}>
           <MyButton
@@ -482,6 +557,15 @@ export default class WithDrawScreen extends Component {
   }
 }
 const styles = StyleSheet.create({
+  statusBarBox: {
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    marginLeft: 5,
+    borderRadius: 5,
+  },
+  statusBarText: {
+    textAlign: 'center',
+  },
   pageHeaderBox: {
     position: "relative",
     alignItems: 'center'
@@ -609,6 +693,12 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     marginTop: 4,
     paddingTop: 4,
+  },
+  balanceBoxStatusStyleBox: {
+    marginTop: 10,
+    paddingHorizontal: 25,
+    alignItems: 'center',
+    textAlign: 'center'
   },
   balanceBoxStatusStyle: {
     fontSize: 12,

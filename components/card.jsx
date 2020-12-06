@@ -27,7 +27,7 @@ export default class Card extends Component {
     }
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   componentDidUpdate() {
     Animated.timing(this._animatedScale, {
@@ -97,7 +97,7 @@ export default class Card extends Component {
                 {this.props.item.aggregator.name}
               </Text>
             </View>
-            <View style={{borderBottomColor: "#e0e0e0", borderStyle: 'solid', borderBottomWidth: 1, paddingBottom: 6, marginBottom: 6, marginRight: 20}}>
+            <View style={{ borderBottomColor: "#e0e0e0", borderStyle: 'solid', borderBottomWidth: 1, paddingBottom: 6, marginBottom: 6, marginRight: 20 }}>
               <Text style={{ color: "#7f7f7f" }}>
                 {this.props.item.park.name}
               </Text>
@@ -127,6 +127,13 @@ export default class Card extends Component {
                 руб.
               </Text>
             </View>
+            {this.props.item.available_requests !== null ? (
+              <View>
+                <Text>
+                  Заявок: {this.props.item.available_requests}
+                </Text>
+              </View>
+            ) : null}
             <View
               style={{
                 marginTop: 3,

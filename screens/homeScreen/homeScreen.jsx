@@ -32,7 +32,9 @@ export default class HomeScreen extends Component {
     this.setState({ refreshing: true, items: [] });
 
     API.get(API_GET_ACCOUNTS).then(res => {
+      console.log('test')
       console.log(res.data)
+      
       this.setState({ refreshing: false, items: res.data })
     });
   };
