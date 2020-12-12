@@ -72,42 +72,52 @@ export default class ConfirmScreen extends Component {
   setUserForcePay = type => {
     this.props.setUserForcePay(type)
   }
+  componentDidMount() {
+    this.confirmAccess = true;
+  }
+  componentDidUpdate() {
+    this.confirmAccess = true;
+  }
 
   onPress = () => {
-    let request = this.sendRequest();
-    request.then(res => {
-      console.log(res.data)
-      if (res.data.type === 'success') {
-        this.props.navigation.navigate("Список аккаунтов", {
-          status: {
-            type: 1,
-            endSumm: this.getEndSummToPay(),
-            showModal: true,
-            showModalInner: true,
-            showed: false,
-            message: res.data.message
-          }
-        });
-        this.setUserMoneyToPayValueRaw(0)
-        this.setUserCardNumberValueRaw('')
-        this.setUserMoneyToPayValue('')
-        this.setUserCardNumberValue('')
-        this.setUserStoreBankCard(false)
-        this.setUserForcePay(false)
-      }
-      if (res.data.type === 'error') {
-        this.props.navigation.navigate("Список аккаунтов", {
-          status: {
-            type: 2,
-            endSumm: this.getEndSummToPay(),
-            showModal: true,
-            showModalInner: true,
-            showed: false,
-            message: res.data.message
-          }
-        });
-      }
-    });
+    console.log(this.confirmAccess)
+    if (this.confirmAccess) {
+      let request = this.sendRequest();
+      this.confirmAccess = false;
+      request.then(res => {
+        console.log(res.data)
+        if (res.data.type === 'success') {
+          this.props.navigation.navigate("Список аккаунтов", {
+            status: {
+              type: 1,
+              endSumm: this.getEndSummToPay(),
+              showModal: true,
+              showModalInner: true,
+              showed: false,
+              message: res.data.message
+            }
+          });
+          this.setUserMoneyToPayValueRaw(0)
+          this.setUserCardNumberValueRaw('')
+          this.setUserMoneyToPayValue('')
+          this.setUserCardNumberValue('')
+          this.setUserStoreBankCard(false)
+          this.setUserForcePay(false)
+        }
+        if (res.data.type === 'error') {
+          this.props.navigation.navigate("Список аккаунтов", {
+            status: {
+              type: 2,
+              endSumm: this.getEndSummToPay(),
+              showModal: true,
+              showModalInner: true,
+              showed: false,
+              message: res.data.message
+            }
+          });
+        }
+      });
+    }
   };
   sendRequest = () => {
     const formData = new FormData();
@@ -117,10 +127,10 @@ export default class ConfirmScreen extends Component {
     if (this.state.user.info.forcePay) {
       formData.append('create_form[forced]', this.state.user.info.forcePay)
     }
-    console.log(!this.state.user.info.selectedMethod.has_storage)
-    console.log(this.state.user.info.cardNumber !== '')
-    console.log(this.state.user.info.storeBankCard)
-    console.log(!this.state.user.info.selectedMethod.has_storage && this.state.user.info.cardNumber !== '')
+    // console.log(!this.state.user.info.selectedMethod.has_storage)
+    // console.log(this.state.user.info.cardNumber !== '')
+    // console.log(this.state.user.info.storeBankCard)
+    // console.log(!this.state.user.info.selectedMethod.has_storage && this.state.user.info.cardNumber !== '')
     if (!this.state.user.info.selectedMethod.has_storage && this.state.user.info.cardNumber !== '' && this.state.user.info.storeBankCard) {
       formData.append('create_form[saveCard]', this.state.user.info.storeBankCard)
     }
@@ -135,9 +145,13 @@ export default class ConfirmScreen extends Component {
     );
   };
   getEndSummToPay = () => {
-    let comission = this.state.user.info.selectedMethod.fixed_commission > this.state.user.info.selectedMethod.min_commission ? this.state.user.info.selectedMethod.fixed_commission : this.state.user.info.selectedMethod.min_commission;
+    let min_commission = this.state.user.info.selectedMethod.min_commission;
+    let fixed_commission = this.state.user.info.selectedMethod.fixed_commission;
+
+    let comission = fixed_commission + this.getComission() > min_commission ? fixed_commission + this.getComission() : min_commission;
+
     let summ = (
-      this.state.user.info.moneyToPayRaw + this.getComission() + comission
+      this.state.user.info.moneyToPayRaw + comission
     );
     // summ = Math.ceil(summ * 100) / 100
     summ = summ.toFixed(2)
@@ -166,7 +180,7 @@ export default class ConfirmScreen extends Component {
       commissionBox = (
         <View style={styles.commissionBoxText}>
           <View style={styles.comissionLine}>
-            <Text style={styles.commissionText}>Итоговая комиссия: </Text>
+            <Text style={styles.commissionText}>Комиссия: </Text>
             <Text>{this.getComission()} ₽</Text>
           </View>
           <View style={styles.comissionLine}>

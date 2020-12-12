@@ -20,38 +20,52 @@ class RootNavigator extends React.Component {
         }
 
     }
+
     render() {
         return (
-            <Stack.Navigator style={styles.container}
-            >
+            <Stack.Navigator style={styles.container}>
                 <Stack.Screen
                     name="Список аккаунтов"
                     component={homeScreenContainer}
-                    // options={{
-                    //     headerRight: (props) => {
-                    //         return (
-                    //             <TouchableOpacity style={{display:'flex', justifyContent: 'space-between', width: 60, height: '100%', padding: 20}} onPress={() => { this.state.nav.openDrawer() }}>
-                    //                 <View style={{width: '100%', height: 2, backgroundColor: 'black'}}></View>
-                    //                 <View style={{width: '100%', height: 2, backgroundColor: 'black'}}></View>
-                    //                 <View style={{width: '100%', height: 2, backgroundColor: 'black'}}></View>
-                    //             </TouchableOpacity>
-                    //         )
-                    //     }
-                    // }}
+                    options={{
+                        headerStyle: { height: 60 },
+                        headerTitleStyle: { marginTop: -20 },
+                        headerLeftContainerStyle: { marginTop: -20 },
+                        headerRightContainerStyle: { marginTop: -20},
+                        // headerRight: (props) => {
+                        //     return (
+                        //         <TouchableOpacity style={{ display: 'flex', justifyContent: 'space-between', width: 60, height: '100%', padding: 20 }} onPress={() => { this.state.nav.openDrawer() }}>
+                        //             <View style={{ width: '100%', height: 2, backgroundColor: 'black' }}></View>
+                        //             <View style={{ width: '100%', height: 2, backgroundColor: 'black' }}></View>
+                        //             <View style={{ width: '100%', height: 2, backgroundColor: 'black' }}></View>
+                        //         </TouchableOpacity>
+                        //     )
+                        // }
+                    }}
                 />
                 <Stack.Screen
                     name="Вывод средств"
                     component={withDrawContainer}
                     options={{
-                        headerBackTitle: "Назад",
+                        headerStyle: { height: 60 },
+                        headerTitleStyle: { marginTop: -20 },
+                        headerLeftContainerStyle: { marginTop: -20 }
                     }}
+                // options={{
+                //     headerBackTitle: "Назад",
+                // }}
                 />
                 <Stack.Screen
                     name="Подтверждение"
                     component={confirmContainer}
                     options={{
-                        headerBackTitle: "Назад",
+                        headerStyle: { height: 60 },
+                        headerTitleStyle: { marginTop: -20 },
+                        headerLeftContainerStyle: { marginTop: -20 }
                     }}
+                // options={{
+                //     headerBackTitle: "Назад",
+                // }}
                 />
                 <Stack.Screen name="Подтверждение карты" component={AgreeCardScreen} />
             </Stack.Navigator>
@@ -70,10 +84,11 @@ const mapDispatchToProps = {};
 export default connect(mapStateToProps, mapDispatchToProps)(RootNavigator);
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center",
-    },
+    // container: {
+    //     flex: 1,
+    //     backgroundColor: "#000",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     height: 100
+    // },
 });

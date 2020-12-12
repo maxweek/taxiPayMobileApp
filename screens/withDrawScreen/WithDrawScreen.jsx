@@ -69,16 +69,20 @@ export default class WithDrawScreen extends Component {
     console.log(this.isMoreBackup)
     this.checkContinueButtonStatus()
   };
-
   componentDidMount() {
     this.refresh();
     this.checkContinueButtonStatus()
+    this.props.navigation.addListener('focus', () => {
+     this.refresh();
+     this.checkContinueButtonStatus()
+    });
   }
   componentDidUpdate() {
     if (this.props.route.params !== undefined) {
       if (this.props.route.params.status !== undefined) {
         if (this.props.route.params.status === true && isBacky) {
           this.refresh()
+          this.checkContinueButtonStatus()
         }
       }
     }
@@ -269,11 +273,11 @@ export default class WithDrawScreen extends Component {
       setTimeout(() => {
         console.log(this.state.moneyToPayValueRaw)
 
-        if (parseInt(this.state.moneyToPayValueRaw) < parseInt(this.item.balance)) {
+        // if (parseInt(this.state.moneyToPayValueRaw) < parseInt(this.item.balance)) {
           this.setState({ balanceBoxStatus: "" })
           if (this.state.selectedMethod !== null) {
             if (this.props.moneyToPayValueRaw !== '' && this.state.moneyToPayValueRaw !== NaN) {
-              if (this.props.cardNumber !== '') {
+              if (this.props.cardNumber !== '' && this.props.cardNumber !== null && this.props.cardNumber !== 0) {
                 this.setState({ continueButtonStatus: "active", balanceBoxStatus: "" })
                 console.log("active")
               } else {
@@ -288,10 +292,10 @@ export default class WithDrawScreen extends Component {
             console.log("disabled3")
             this.setState({ continueButtonStatus: "disabled", balanceBoxStatus: "Не выбран способ оплаты" })
           }
-        } else {
-          console.log("disabled4")
-          this.setState({ continueButtonStatus: "disabled", balanceBoxStatus: "Сумма не должна превышать ваш текущий баланс" })
-        }
+        // } else {
+        //   console.log("disabled4")
+        //   this.setState({ continueButtonStatus: "disabled", balanceBoxStatus: "Сумма не должна превышать ваш текущий баланс" })
+        // }
       }, 10)
     }
   }
